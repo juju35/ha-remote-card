@@ -120,7 +120,10 @@ test("a key is hidden when the integration has none or the player does not suppo
   for (const k of ["power", "up", "down", "left", "right", "ok", "back", "home", "menu", "volume_up", "volume_down", "play_pause", "previous", "next"]) {
     assert.match(out, new RegExp(`data-key="${k}"`), k);
   }
-  assert.doesNotMatch(out, /data-key="mute"/, "Apple TV has no mute");
+  assert.doesNotMatch(out, /data-key="mute"/, "this Apple TV player cannot mute");
+  // Mute through the player once it supports it (VOLUME_MUTE), between − and +.
+  const muting = makeHass({ "media_player.living_room_apple_tv": { attributes: { supported_features: 450487 | 8 } } });
+  assert.match(html(newCard({ entity: "remote.living_room_apple_tv" }, muting)), /data-key="volume_down"[\s\S]*data-key="mute"[\s\S]*data-key="volume_up"/);
   assert.doesNotMatch(out, /data-key="channel_up"/, "nor channel keys");
   const philips = html(newCard({ entity: "remote.bedroom_tv_remote" }, h));
   assert.match(philips, /data-key="channel_up"/);
@@ -182,7 +185,7 @@ test("a press sends at once and repeats while held, the click after it sends not
   const card = newCard({ entity: "remote.living_room_apple_tv" }, h);
   press(card, "up");
   assert.equal(h.calls.length, 1);
-  await wait(450 + 180 * 2 + 60);
+  await wait(450 + 180 * 4);
   release();
   const held = h.calls.length;
   assert.ok(held >= 3, `repeated ${held} times`);
@@ -396,6 +399,13 @@ test("every language has every English text, and nothing else; the language opti
   assert.match(fr, /aria-label="Retour"/);
   const sr = html(newCard({ entity: "remote.living_room_apple_tv" }, makeHass({}, { language: "sr-Latn" })));
   assert.match(sr, /aria-label="Nazad"/);
+});
+
+test("a dark theme gives the card its lighter accent tint", () => {
+  assert.doesNotMatch(html(newCard({ entity: "remote.living_room_apple_tv" })), /<ha-card class="dark">/);
+  const card = newCard({ entity: "remote.living_room_apple_tv" }, makeHass({}, { themes: { darkMode: true } }));
+  assert.match(html(card), /<ha-card class="dark">/);
+  assert.match(html(card), /ha-card\.dark \{ --rc-fg: var\(--rc-accent-light\); \}/);
 });
 
 test("names are escaped", () => {

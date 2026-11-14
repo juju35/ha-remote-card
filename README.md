@@ -37,12 +37,13 @@ The card finds the TV's `remote` and `media_player` entities on the same device 
 - Two cards: a full **Remote Card** (`custom:remote-card`) and a compact **Remote Mini Card** (`custom:remote-mini-card`)
 - Header: the TV's name, **what is playing** (app · title, with dancing bars while it plays) and a progress bar, the **power** key on the right, outlined in the accent color while the TV is on
 - Large round **D-pad**: up, down, left, right and OK; optional **swipe gestures** (swipe to move, tap to press)
-- Back, home and menu keys, a **volume** rocker with mute (its icon and accent follow the mute state), a **channel** rocker when the TV has channels, play / pause, previous and next
+- Back, home and menu keys on the same row as the **volume** rocker (− | mute | +, the mute key in the accent color while muted) when the card is wide enough, a **channel** rocker when the TV has channels, play / pause, previous and next
+- Outlined keys, never filled: the accent color rings the key pressed or active
 - **Sources and apps** button: a popup at the top of the card with your **app shortcuts** (a source, an Android TV activity or app link, a remote command or any action) and the **sources** of the player; the current one is highlighted
 - **Long press repeats** the direction, volume and channel keys; **haptic feedback** on every key sent (Home Assistant companion app)
 - Keys the TV does not have, or its player does not support, are hidden
 - **`commands`**: remap any key to another command, a list of commands, or any Home Assistant action, or hide it
-- Mini card: power, what is playing (artwork, title, progress), play / pause and volume; its **detail button** (top right) unfolds the full remote, and a click anywhere outside the card folds it back
+- Mini card: power and the **detail button** side by side at the top right, what is playing (artwork, title, progress), play / pause and volume; the detail button unfolds the full remote, and a click anywhere outside the card folds it back
 - Click the name or what is playing to open the more-info dialog of the player
 - Visual editor in the dashboard UI for both cards (no YAML needed, except `apps` and `commands`)
 - Sections view: the full card takes 12 columns by default and at least 6, the mini card 6; narrow widths get their own layout
@@ -53,7 +54,7 @@ The card finds the TV's `remote` and `media_player` entities on the same device 
 
 | Integration | Detected from | How the keys are sent |
 |---|---|---|
-| <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/images/apple_tv.png" alt="" width="16"> [Apple TV](https://www.home-assistant.io/integrations/apple_tv/) (core, `apple_tv`) | `remote` + `media_player` | `remote.send_command`: `up`, `select`, `menu` (back), `home`, `top_menu` (menu), `volume_up`, `play_pause`, `previous`, `next`… No mute nor channel keys (the Siri Remote has none) |
+| <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/images/apple_tv.png" alt="" width="16"> [Apple TV](https://www.home-assistant.io/integrations/apple_tv/) (core, `apple_tv`) | `remote` + `media_player` | `remote.send_command`: `up`, `select`, `menu` (back), `home`, `top_menu` (menu), `volume_up`, `play_pause`, `previous`, `next`…; mute through the media player when it supports it (the Siri Remote has no mute key); no channel keys |
 | <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/images/androidtv.png" alt="" width="16"> [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/) (core, `androidtv_remote`) — Google TV, NVIDIA Shield, Freebox Pop… | `remote` + `media_player` | `remote.send_command`: `DPAD_UP`, `DPAD_CENTER`, `BACK`, `HOME`, `MENU`, `VOLUME_UP`, `VOLUME_MUTE`, `CHANNEL_UP`, `MEDIA_PLAY_PAUSE`… |
 | <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/images/philips.png" alt="" width="16"> [Philips TV](https://www.home-assistant.io/integrations/philips_js/) (core, `philips_js`) | `remote` + `media_player` | `remote.send_command`: `CursorUp`, `Confirm`, `Back`, `Home`, `Options` (menu), `VolumeUp`, `Mute`, `ChannelStepUp`, `PlayPause`… |
 | <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/images/samsung.png" alt="" width="16"> [Samsung Smart TV](https://www.home-assistant.io/integrations/samsungtv/) (core, `samsungtv`) | `remote` + `media_player` | `remote.send_command`: `KEY_UP`, `KEY_ENTER`, `KEY_RETURN`, `KEY_HOME`, `KEY_MENU`, `KEY_VOLUP`, `KEY_MUTE`, `KEY_CHUP`…; transport through the media player |
@@ -234,7 +235,7 @@ The mini card, and its detailed view after a click on the detail button:
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/screenshots/mini-card-zoom.png" alt="mini card zoomed" width="360"> | <img src="https://raw.githubusercontent.com/juju35/ha-remote-card/main/screenshots/mini-card-zoom-dark.png" alt="mini card zoomed dark" width="360"> |
 
-Narrow widths: the full card at 238 px (the rockers on two lines) and the mini card at 170 px (the artwork and the volume give way, the power key moves next to play / pause):
+Narrow widths: the full card at 238 px (back / home / menu, volume and channels each on their own line) and the mini card at 170 px (the artwork and the volume give way, the power key moves next to play / pause):
 
 | | Full card | Mini card |
 |---|---|---|

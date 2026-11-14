@@ -1390,8 +1390,6 @@ const ICONS = {
   menu: "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z",
   plus: "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z",
   minus: "M19,13H5V11H19V13Z",
-  volume:
-    "M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z",
   mute: "M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.5,12.43 16.5,12.21 16.5,12Z",
   play: "M8,5.14V19.14L19,12.14L8,5.14Z",
   pause: "M14,19H18V5H14M6,19H10V5H6V19Z",
@@ -1460,7 +1458,8 @@ const INTEGRATIONS = {
     name: "Apple TV",
     keys: remoteKeys([
       ...["up", "down", "left", "right", "select", "menu", "home", "top_menu"],
-      ...["volume_up", "volume_down", null],
+      // No mute command on the Siri Remote: through the media player, when it supports it.
+      ...["volume_up", "volume_down", MUTE],
       // The Siri Remote has no channel keys (pyatv's channel_up / channel_down can be set with `commands`).
       ...[null, null],
       ...["play_pause", "previous", "next"],
@@ -1737,12 +1736,17 @@ const morph = (root, html) => {
 // ---------------------------------------------------------------------------
 
 const BASE_STYLE = `
-  :host { --rc-accent: #7c4dff;
+  /* Accent blue-grey; its lighter tint carries icons, text, rings and bars on a dark theme. */
+  :host { --rc-accent: #546e7a; --rc-accent-light: #90a4ae; --rc-fg: var(--rc-accent);
           --rc-idle: var(--disabled-text-color, #9e9e9e);
-          --rc-glass: color-mix(in srgb, var(--primary-text-color) 5%, transparent);
-          --rc-glass-hover: color-mix(in srgb, var(--primary-text-color) 10%, transparent);
+          --rc-glass: color-mix(in srgb, var(--primary-text-color) 3%, transparent);
+          --rc-glass-hover: color-mix(in srgb, var(--primary-text-color) 7%, transparent);
+          --rc-ring: color-mix(in srgb, var(--rc-fg) 75%, transparent);
           --rc-line: color-mix(in srgb, var(--primary-text-color) 14%, transparent);
-          --rc-accent-text: color-mix(in srgb, var(--rc-accent) 60%, var(--primary-text-color)); }
+          --rc-accent-text: var(--rc-fg); }
+  ha-card.dark { --rc-fg: var(--rc-accent-light); }
+  /* Resolved on the card, so that they follow its --rc-fg. */
+  ha-card { --rc-accent-text: var(--rc-fg); --rc-ring: color-mix(in srgb, var(--rc-fg) 75%, transparent); }
   :host { display: block; min-width: 0; --rc-natural-width: 360px; }
   :host::before { content: ""; display: grid; grid-template-columns: minmax(0, var(--rc-natural-width)); height: 0; }
   ha-card { overflow: hidden; container-type: inline-size; position: relative; }
@@ -1756,38 +1760,41 @@ const BASE_STYLE = `
   .sub { font-size: 12px; line-height: 1.4; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; display: flex; align-items: center; gap: 6px; }
   .sub span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .type-icon { display: flex; flex: none; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center;
-               background: color-mix(in srgb, var(--rc-accent) 16%, transparent); transition: background-color .2s ease; }
-  .type-icon .icon { width: 24px; height: 24px; fill: color-mix(in srgb, var(--rc-accent) 60%, var(--primary-text-color)); transition: fill .2s ease; }
+               background: color-mix(in srgb, var(--rc-fg) 18%, transparent); transition: background-color .2s ease; }
+  .type-icon .icon { width: 24px; height: 24px; fill: var(--rc-fg); transition: fill .2s ease; }
   .type-icon.off { background: color-mix(in srgb, var(--rc-idle) 14%, transparent); }
   .type-icon.off .icon { fill: var(--secondary-text-color); }
   .warning { padding: 16px; color: color-mix(in srgb, var(--warning-color, #ffa600) 50%, var(--primary-text-color)); }
   /* Keys: outlined smoked glass, never filled; the accent marks an active state (on, muted, playing). */
   .key { all: unset; box-sizing: border-box; display: grid; place-items: center; cursor: pointer; color: var(--primary-text-color);
-         background: var(--rc-glass); border: 1px solid var(--rc-line); border-radius: 50%; width: 48px; height: 48px; flex: none;
+         background: transparent; border: 1px solid var(--rc-line); border-radius: 50%; width: 48px; height: 48px; flex: none;
          touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
          transition: background-color .15s ease, transform .1s ease, color .2s ease, border-color .2s ease; }
   .key:hover { background: var(--rc-glass-hover); }
-  .key:active, .key.pressed { transform: scale(.93); background: color-mix(in srgb, var(--rc-accent) 14%, transparent); }
-  .key.on { color: var(--rc-accent-text); border-color: color-mix(in srgb, var(--rc-accent) 55%, transparent); }
-  .key.small, .key.power { width: 40px; height: 40px; }
+  .key:active, .key.pressed { transform: scale(.93); color: var(--rc-accent-text); border-color: var(--rc-ring); }
+  .key.on { color: var(--rc-accent-text); border-color: var(--rc-ring); }
+  .key.small { width: 40px; height: 40px; }
+  .key.power { width: 36px; height: 36px; }
+  .key.power .icon { width: 18px; height: 18px; }
   .key.small .icon { width: 18px; height: 18px; }
   .key:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: 2px; }
-  .zoom { all: unset; flex: none; cursor: pointer; width: 24px; height: 24px; margin: -2px -4px 0 0; border-radius: 50%; align-self: flex-start;
-          display: grid; place-items: center; color: var(--secondary-text-color);
-          background: color-mix(in srgb, var(--rc-idle) 10%, transparent); border: 1px solid color-mix(in srgb, var(--rc-idle) 25%, transparent); }
-  .zoom .icon { width: 14px; height: 14px; }
-  .zoom:hover { background: color-mix(in srgb, var(--rc-idle) 18%, transparent); color: var(--primary-text-color); }
+  .zoom { all: unset; box-sizing: border-box; flex: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
+          display: grid; place-items: center; color: var(--secondary-text-color); background: transparent; border: 1px solid var(--rc-line);
+          transition: background-color .15s ease, color .2s ease, border-color .2s ease; }
+  .zoom .icon { width: 18px; height: 18px; }
+  .zoom:hover { background: var(--rc-glass-hover); color: var(--primary-text-color); }
+  .zoom[aria-pressed="true"] { color: var(--rc-accent-text); border-color: var(--rc-ring); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: 1px; }
   /* Three bars dance while playing. */
   .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; flex: none; }
-  .eq i { width: 3px; height: 100%; border-radius: 1px; background: var(--rc-accent); transform-origin: bottom; transform: scaleY(.35); }
+  .eq i { width: 3px; height: 100%; border-radius: 1px; background: var(--rc-fg); transform-origin: bottom; transform: scaleY(.35); }
   .eq.run i { animation: rc-eq .9s ease-in-out infinite; }
   .eq.run i:nth-child(2) { animation-delay: -.3s; animation-duration: .7s; }
   .eq.run i:nth-child(3) { animation-delay: -.6s; animation-duration: 1.1s; }
   @keyframes rc-eq { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
   /* Progress of the media playing, moving on its own between two updates. */
   .track { height: 3px; border-radius: 2px; background: var(--rc-line); overflow: hidden; }
-  .track > div { height: 100%; border-radius: 2px; background: var(--rc-accent); width: var(--from); }
+  .track > div { height: 100%; border-radius: 2px; background: var(--rc-fg); width: var(--from); }
   .track > div.run { animation: rc-progress var(--left) linear forwards; }
   @keyframes rc-progress { from { width: var(--from); } to { width: 100%; } }
   @container (max-width: 230px) {
@@ -1799,14 +1806,14 @@ const FULL_STYLE = `
   .progress { margin: 10px 12px 0; }
   .content { padding: 16px 12px 14px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
   /* The D-pad: a ring with four chevrons and OK in the middle, sized to the card. */
-  .dpad { position: relative; width: min(100%, 224px); aspect-ratio: 1; border-radius: 50%; flex: none;
-          background: var(--rc-glass); border: 1px solid var(--rc-line); box-sizing: border-box; }
+  .dpad { position: relative; width: min(100%, 190px); aspect-ratio: 1; border-radius: 50%; flex: none;
+          background: transparent; border: 1px solid var(--rc-line); box-sizing: border-box; }
   .dpad.swipe, .dpad.swipe .arrow, .dpad.swipe .ok { touch-action: none; }
   .dpad .arrow { all: unset; position: absolute; display: grid; place-items: center; cursor: pointer; color: var(--primary-text-color);
                  touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
                  border-radius: 50%; transition: background-color .15s ease; }
-  .dpad .arrow .icon { width: 30px; height: 30px; transition: transform .1s ease, color .15s ease; }
-  .dpad .arrow:hover { background: var(--rc-glass); }
+  .dpad .arrow .icon { width: 28px; height: 28px; transition: transform .1s ease, color .15s ease; }
+  .dpad .arrow:hover { background: var(--rc-glass-hover); }
   .dpad .arrow:active .icon, .dpad .arrow.pressed .icon { transform: scale(.85); color: var(--rc-accent-text); }
   .dpad .arrow:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: -4px; }
   .dpad .up { top: 2%; left: 30%; width: 40%; height: 28%; }
@@ -1815,19 +1822,19 @@ const FULL_STYLE = `
   .dpad .right { right: 2%; top: 30%; width: 28%; height: 40%; }
   .dpad .ok { all: unset; position: absolute; left: 31%; top: 31%; width: 38%; height: 38%; border-radius: 50%; box-sizing: border-box;
               display: grid; place-items: center; cursor: pointer; font-size: 15px; font-weight: 600; letter-spacing: .04em;
-              color: var(--primary-text-color); background: var(--rc-glass); border: 1px solid var(--rc-line);
+              color: var(--primary-text-color); background: transparent; border: 1px solid var(--rc-line);
               touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
               transition: background-color .15s ease, transform .1s ease, color .15s ease, border-color .15s ease; }
   .dpad .ok:hover { background: var(--rc-glass-hover); }
-  .dpad .ok:active, .dpad .ok.pressed { transform: scale(.94); color: var(--rc-accent-text); border-color: color-mix(in srgb, var(--rc-accent) 55%, transparent); }
+  .dpad .ok:active, .dpad .ok.pressed { transform: scale(.94); color: var(--rc-accent-text); border-color: var(--rc-ring); }
   .dpad .ok:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: 2px; }
-  .keys { display: flex; justify-content: center; gap: 14px; }
+  .controls { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px 16px; }
+  .keys { display: flex; justify-content: center; gap: 8px; }
   /* Rockers: volume and channel, one outlined pill each. */
-  .rockers { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-  .rocker { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 26px; border: 1px solid var(--rc-line); }
+  .rocker { display: flex; align-items: center; gap: 0; padding: 0 2px; border-radius: 26px; border: 1px solid var(--rc-line); background: transparent; }
   .rocker .key { background: transparent; border-color: transparent; }
   .rocker .key:hover { background: var(--rc-glass-hover); }
-  .rocker .key.on { border-color: color-mix(in srgb, var(--rc-accent) 55%, transparent); }
+  .rocker .key.on, .rocker .key.pressed { border-color: transparent; }
   .rocker .label { font-size: 11px; font-weight: 500; color: var(--secondary-text-color); letter-spacing: .05em; padding: 0 2px; min-width: 2ch; text-align: center; }
   .transport { display: flex; justify-content: center; align-items: center; gap: 10px; }
   .transport .sep { width: 1px; height: 24px; background: var(--rc-line); margin: 0 2px; }
@@ -1845,12 +1852,12 @@ const FULL_STYLE = `
   .app { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 12px; cursor: pointer; min-width: 0;
          background: var(--rc-glass); border: 1px solid var(--rc-line); font-size: 13px; transition: background-color .15s ease; }
   .app:hover { background: var(--rc-glass-hover); }
-  .app.on { border-color: color-mix(in srgb, var(--rc-accent) 55%, transparent); color: var(--rc-accent-text); }
+  .app.on { border-color: var(--rc-ring); color: var(--rc-accent-text); }
   .app:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: 2px; }
   .app span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .app ha-icon { --mdc-icon-size: 18px; width: 18px; height: 18px; flex: none; color: var(--rc-accent-text); }
   .app .initial { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 600;
-                  background: color-mix(in srgb, var(--rc-accent) 16%, transparent); color: var(--rc-accent-text); }
+                  background: color-mix(in srgb, var(--rc-fg) 18%, transparent); color: var(--rc-accent-text); }
   .sources { display: flex; flex-direction: column; gap: 2px; }
   .source { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-size: 14px; }
   .source:hover { background: var(--rc-glass); }
@@ -1859,9 +1866,9 @@ const FULL_STYLE = `
   .source span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .source:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: -2px; }
   @container (max-width: 280px) {
-    .key { width: 42px; height: 42px; }
-    .key.small, .key.power { width: 36px; height: 36px; }
-    .keys { gap: 10px; }
+    .key { width: 44px; height: 44px; }
+    .key.small { width: 40px; height: 40px; }
+    .controls { gap: 10px; }
     .transport { gap: 6px; }
   }
 `;
@@ -1994,7 +2001,7 @@ class RemoteCard extends HTMLElement {
     const h = this._hass;
     if (!h || !this._config) return null;
     const r = resolve(h, this._config);
-    return [h.entities, h.devices, h.language, h.locale, h.states[r.remote], h.states[r.mp]];
+    return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, h.states[r.remote], h.states[r.mp]];
   }
 
   connectedCallback() {
@@ -2268,7 +2275,7 @@ class RemoteCard extends HTMLElement {
     const muted = !!this._hass.states[ctx.mp]?.attributes?.is_volume_muted;
     return [
       this._key(ctx, "volume_down", { cls, icon: ICONS.minus }),
-      this._key(ctx, "mute", { cls, icon: muted ? ICONS.mute : ICONS.volume, on: muted, extra }),
+      this._key(ctx, "mute", { cls, icon: ICONS.mute, on: muted, extra }),
       this._key(ctx, "volume_up", { cls, icon: ICONS.plus }),
     ].join("");
   }
@@ -2330,7 +2337,7 @@ class RemoteCard extends HTMLElement {
       const up = this._key(ctx, "channel_up", { icon: ICONS.up });
       if (down || up) parts.push(`<div class="rocker" role="group" aria-label="${esc(this._t("channel"))}" data-k="ch">${down}<span class="label" aria-hidden="true">CH</span>${up}</div>`);
     }
-    return parts.length ? `<div class="rockers" data-k="rockers">${parts.join("")}</div>` : "";
+    return parts.join("");
   }
 
   _dpad(ctx) {
@@ -2348,7 +2355,7 @@ class RemoteCard extends HTMLElement {
   }
 
   _errorCard(key) {
-    return `<style>${BASE_STYLE}</style><ha-card><div class="warning">${esc(this._t(key))}</div></ha-card>`;
+    return `<style>${BASE_STYLE}</style><ha-card${this._hass.themes?.darkMode ? ' class="dark"' : ""}><div class="warning">${esc(this._t(key))}</div></ha-card>`;
   }
 
   // null, or the error to show.
@@ -2367,13 +2374,12 @@ class RemoteCard extends HTMLElement {
     const nav = ["back", "home", "menu"].map((k) => this._key(ctx, k)).join("");
     const sub = this._subtitle(m, ctx);
     return `<style>${BASE_STYLE}${FULL_STYLE}</style>
-      <ha-card>
+      <ha-card${this._hass.themes?.darkMode ? ' class="dark"' : ""}>
         ${this._header(ctx, m, sub ? `${m.on ? this._eq(m) : ""}<span>${esc(sub)}</span>` : "")}
         ${m.progress && this._show("show_subtitle") ? `<div class="progress" data-k="progress">${this._track(m.progress)}</div>` : ""}
         <div class="content">
           ${this._dpad(ctx)}
-          ${nav ? `<div class="keys" data-k="nav">${nav}</div>` : ""}
-          ${this._rockers(ctx)}
+          <div class="controls" data-k="controls">${nav ? `<div class="keys" data-k="nav">${nav}</div>` : ""}${this._rockers(ctx)}</div>
           ${this._transport(ctx, m)}
         </div>
         ${this._popupHtml(ctx)}
@@ -2461,7 +2467,7 @@ class RemoteMiniCard extends RemoteCard {
     ].join("");
     const sub = !m.known ? INTEGRATIONS[ctx.integration].name : m.on ? m.app || m.state : m.state;
     return `<style>${BASE_STYLE}${MINI_STYLE}</style>
-      <ha-card>
+      <ha-card${this._hass.themes?.darkMode ? ' class="dark"' : ""}>
         ${this._header(ctx, m, sub ? `<span>${esc(sub)}</span>` : "")}
         <div class="content">
           ${this._nowPlaying(ctx, m)}
@@ -2621,4 +2627,4 @@ for (const card of [
   if (!window.customCards.some((c) => c.type === card.type)) window.customCards.push({ ...card, preview: true, documentationURL: "https://github.com/juju35/ha-remote-card" });
 }
 
-console.info(`%c REMOTE-CARD %c v${VERSION} `, "color: white; background: #7c4dff; font-weight: 700;", "color: #7c4dff; background: white; font-weight: 700;");
+console.info(`%c REMOTE-CARD %c v${VERSION} `, "color: white; background: #546e7a; font-weight: 700;", "color: #546e7a; background: white; font-weight: 700;");
