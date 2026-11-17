@@ -1694,6 +1694,13 @@ const lang = (hass, config) => {
 const t = (hass, config, key, vars = {}) =>
   String(STRINGS[lang(hass, config)][key] ?? STRINGS.en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 
+// The whole width of an element's text in its own font, an ellipsised one included.
+const textWidth = (el) => {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  return range.getBoundingClientRect().width;
+};
+
 const svgIcon = (path, cls = "") => `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
 
 const domainOf = (id) => String(id || "").split(".")[0];
@@ -1946,7 +1953,7 @@ const BANNER_STYLE = `
   .rc-scene { position: absolute; right: 0; bottom: 10px; height: 80px; width: min(52cqw, 220px); overflow: hidden; }
   .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(52cqw, 220px) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
-  .htext .titles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .htext .titles { flex: 1 1 auto; min-width: 0; gap: 2px; }
   .htext .name { font-size: 16px; font-weight: 600; }
   .htext .sub { color: var(--rc-sky-muted); }
   .htext .eq i { background: var(--rc-on); }
@@ -1968,14 +1975,6 @@ const BANNER_STYLE = `
   .banner .pill { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
   .banner.night .pill { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
   .banner .pill.on { --c: var(--rc-on); } .banner .pill.off { --c: #8a8f98; }
-  .htext { container: rc-head / inline-size; }
-  /* Not enough room beside the title: the pill on its own line under the subtitle. */
-  @container rc-head (max-width: 185px) {
-    .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 2px; }
-    .htext .trow { display: contents; } .htext .trow .name { max-width: 100%; }
-    .htext .titles > .sub { justify-self: stretch; }
-    .htext .pill { order: 9; max-width: 100%; }
-  }
   /* Narrow card: no room for the picture beside the text, the bare wall stays. */
   @container rc-card (max-width: 300px) { .rc-scene { display: none; } .htext { right: 36px; } .banner.two .htext { right: 64px; } }
   .rc-night, .night .rc-day { display: none; }
@@ -2122,9 +2121,20 @@ const BASE_STYLE = `
   .header { position: relative; }
   .header .hbtns { top: 10px; right: 10px; }
   .header.one { padding-right: 40px; } .header.two { padding-right: 68px; }
-  /* The status pill right after the title (the title ellipsised first), centred on it; its dot alone on a tiny card. */
+  /* The status pill right after the title, centred on it, while the title stays whole and the pill's whole label fits
+     beside it; otherwise (measured by the card, see _fitPill) the pill on its own line under a one-line subtitle, and
+     if even that would not fit in the header, its dot alone (the label stays in title and aria-label). */
+  .titles { display: flex; flex-direction: column; }
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .trow .name { flex: 0 1 auto; min-width: 0; }
+  .trow .pill { flex: none; max-width: none; }
+  .titles.below { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; }
+  .titles.below .trow { display: contents; }
+  .titles.below .name { max-width: 100%; }
+  .titles.below > .sub { justify-self: stretch; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titles.below .pill { grid-row: 3; max-width: 100%; }
+  .titles.pill-dot .pill { padding: 4px; }
+  .titles.pill-dot .pill .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .pill { --c: var(--rc-fg); flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
           line-height: 16px; white-space: nowrap; box-sizing: border-box; max-width: calc(100% - 56px); overflow: hidden;
           background: color-mix(in srgb, var(--c) 15%, transparent); color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color)); }
@@ -2365,10 +2375,24 @@ class RemoteCard extends HTMLElement {
     this._outside ??= watchOutside(this, () => this._outsideClick());
     this._outside.on();
     if (this._hass && this._config) this._update();
+    // A new width (or the web font loaded): the status pill is fitted again, in the next frame.
+    if (typeof ResizeObserver === "function") {
+      this._resize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._resize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
   }
 
   disconnectedCallback() {
     this._outside?.off();
+    this._resize?.disconnect();
+    this._fitWidth = null;
     this._release();
     // Left (another view, a conditional card hidden): the popup closes, sending nothing.
     this._popup = null;
@@ -2409,6 +2433,32 @@ class RemoteCard extends HTMLElement {
     if (html === this._html) return;
     this._html = html;
     morph(this.shadowRoot, html);
+    this._fitPill();
+  }
+
+  // The status pill stays right after the title only while the whole title and the pill's whole label fit on that
+  // row; otherwise it takes a line of its own under the subtitle (.below), and when even then the title, the subtitle
+  // and the pill would not fit above the banner's ground strip, it keeps its dot alone (.pill-dot). Measured in the
+  // real fonts, so that every language and title length gets its own answer.
+  _fitPill() {
+    for (const t of this.shadowRoot?.querySelectorAll?.(".titles") || []) {
+      const row = t.querySelector(":scope > .trow");
+      const chip = row?.querySelector(":scope > .pill");
+      if (!chip?.getBoundingClientRect) continue;
+      t.classList.remove("below", "pill-dot");
+      const name = row.querySelector(":scope > .name");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const title = name ? textWidth(name) + gap : 0;
+      const pill = chip.getBoundingClientRect().width;
+      if (title + pill <= row.getBoundingClientRect().width + 0.5) continue;
+      t.classList.add("below");
+      const r = t.getBoundingClientRect();
+      const banner = t.closest(".banner");
+      const box = banner?.getBoundingClientRect();
+      const floor = banner?.querySelector(".rc-strip")?.getBoundingClientRect().top ?? box?.bottom;
+      const tall = box && (r.bottom > floor + 0.5 || r.top < box.top - 0.5);
+      if (tall || pill > r.width + 0.5) t.classList.add("pill-dot");
+    }
   }
 
   _show(name) {
@@ -2615,7 +2665,7 @@ class RemoteCard extends HTMLElement {
     const pill = m.known ? `<span class="pill ${m.status || "on"}" title="${esc(m.state)}"><span class="dot"></span><span class="t">${esc(m.state)}</span></span>` : "";
     const titles = `<div class="titles"${more}>
           <div class="trow">${this._show("show_title") ? `<div class="name">${esc(this._name(ctx))}</div>` : ""}${pill}</div>
-          ${sub && this._show("show_subtitle") ? `<div class="sub">${sub}</div>` : ""}
+          ${sub && this._show("show_subtitle") ? `<div class="sub" title="${sub.replace(/<[^>]*>/g, "").trim()}">${sub}</div>` : ""}
         </div>`;
     const zoom = this._zoomButton();
     // Power and the detail button: one line of small rounds in the top right corner, the detail button last.

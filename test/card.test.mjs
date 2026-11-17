@@ -294,7 +294,7 @@ test("header: the device name, what is playing as subtitle, power on the right w
   const card = newCard({ entity: "remote.living_room_apple_tv" });
   const out = html(card);
   assert.match(out, /class="name">Living Room Apple TV</);
-  assert.match(out, /class="sub"><span class="eq run"[\s\S]*<span>Plex · The Northern Lights<\/span>/);
+  assert.match(out, /class="sub"[^>]*><span class="eq run"[\s\S]*<span>Plex · The Northern Lights<\/span>/);
   assert.match(out, /class="track" data-k="track"><div class="run"/);
   assert.match(out, /class="key power on" data-key="power"[^>]*title="Power · Playing"[^>]*aria-pressed="true"/);
   assert.match(out, /data-action="more_info" data-entity="media_player.living_room_apple_tv"/);
@@ -308,7 +308,7 @@ test("header: the device name, what is playing as subtitle, power on the right w
   assert.doesNotMatch(off, /class="eq/);
   // On, not playing: no dancing bars, the source and the channel.
   const tv = html(newCard({ entity: "remote.bedroom_tv_remote" }));
-  assert.match(tv, /class="sub"><span>Watch TV · News 24<\/span>/);
+  assert.match(tv, /class="sub"[^>]*><span>Watch TV · News 24<\/span>/);
   const p = rc.progress({ state: "paused", attributes: { media_duration: 100, media_position: 25, media_position_updated_at: new Date(0).toISOString() } });
   assert.deepEqual(plain(p), { pct: 25, left: 75, playing: false });
   assert.equal(rc.progress({ state: "playing", attributes: {} }), null);
@@ -341,7 +341,7 @@ test("the mini card shows power, now playing, play / pause and volume; its detai
   assert.match(out, /class="now-title"><span class="eq run"[\s\S]*The Northern Lights/);
   assert.match(out, /class="now-sub">Nature Documentaries</);
   assert.match(out, /<img src="data:image\/svg\+xml/);
-  assert.match(out, /class="sub"><span>Plex<\/span>/);
+  assert.match(out, /class="sub"[^>]*><span>Plex<\/span>/);
   assert.doesNotMatch(out, /class="dpad/);
   assert.match(out, /data-action="zoom"/);
   assert.deepEqual(plain(card.getGridOptions()), { columns: 6, min_columns: 6, rows: "auto" });
@@ -456,4 +456,66 @@ test("illustrated header: the screen and the icon follow the state, the box foll
   const mini = html(newCard({ entity: "remote.kitchen_roku" }, makeHass(), rc.RemoteMiniCard));
   assert.match(mini, /class="banner s-on two"/);
   assert.match(mini, /class="hbtns">[\s\S]*class="zoom"/);
+});
+
+// A measured layout stand-in for _fitPill: the title block (.titles) with its row (title + pill) in a banner whose
+// ground strip starts at 80 px. Widths in px; `tall` makes the block run past the strip once the pill drops.
+const fitLayout = ({ title, pill, row, tall = false, banner = true }) => {
+  const rect = (o) => ({ top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0, ...o });
+  const classes = new Set();
+  const name = { textContent: "x", width: title, getClientRects: () => [1] };
+  const chip = { getBoundingClientRect: () => rect({ width: classes.has("pill-dot") ? 14 : pill }) };
+  const trow = { querySelector: (s) => (s.includes(".name") ? name : chip), getBoundingClientRect: () => rect({ width: row }) };
+  const ground = { getBoundingClientRect: () => rect({ top: 80 }) };
+  const box = { getBoundingClientRect: () => rect({ top: 0, bottom: 90 }), querySelector: () => ground };
+  const t = {
+    classList: {
+      add: (c) => classes.add(c),
+      remove: (...c) => {
+        for (const x of c) classes.delete(x);
+      },
+    },
+    querySelector: () => trow,
+    closest: () => (banner ? box : null),
+    getBoundingClientRect: () => rect({ top: 10, bottom: classes.has("below") && tall ? 86 : 70, width: row }),
+  };
+  return { t, classes };
+};
+
+test("the status pill stays beside a whole title, else drops under the subtitle, else keeps its dot (measured)", () => {
+  const w = rc.window;
+  w.getComputedStyle = () => ({ columnGap: "8px" });
+  w.document.createRange = () => {
+    let el;
+    return { selectNodeContents: (e) => (el = e), getBoundingClientRect: () => ({ width: el.width }) };
+  };
+  const fit = (opts) => {
+    const card = newCard({ entity: "remote.kitchen_roku" });
+    const l = fitLayout(opts);
+    card.shadowRoot.querySelectorAll = () => [l.t];
+    card._fitPill();
+    return [...l.classes].sort().join(" ");
+  };
+  // Whole title + gap + whole pill fit on the row: the pill stays beside the title.
+  assert.equal(fit({ title: 60, pill: 70, row: 140 }), "");
+  // One pixel short: never an ellipsised title beside the pill, the pill goes under the subtitle.
+  assert.equal(fit({ title: 63, pill: 70, row: 140 }), "below");
+  // Long Greek/Cyrillic/German labels: decided by the measure, not by a fixed width.
+  assert.equal(fit({ title: 40, pill: 130, row: 160 }), "below");
+  assert.equal(fit({ title: 40, pill: 112, row: 160 }), "");
+  // Under the subtitle but the block would run into the ground strip, or the label is wider than the line: dot only.
+  assert.equal(fit({ title: 90, pill: 70, row: 140, tall: true }), "below pill-dot");
+  assert.equal(fit({ title: 90, pill: 150, row: 140 }), "below pill-dot");
+  // The classic header (no banner) follows the same rule.
+  assert.equal(fit({ title: 90, pill: 70, row: 140, banner: false }), "below");
+  delete w.getComputedStyle;
+  delete w.document.createRange;
+});
+
+test("no fixed width decides the pill's place: only the dot-only rule at 200 px is a width rule", () => {
+  const css = (newCard({ entity: "remote.kitchen_roku" })).shadowRoot.innerHTML;
+  assert.doesNotMatch(css, /@container rc-head/);
+  assert.match(css, /\.titles\.below \.trow \{ display: contents; \}/);
+  assert.match(css, /\.titles\.pill-dot \.pill \.t \{ position: absolute;/);
+  assert.match(css, /@container rc-card \(max-width: 200px\) \{ \.pill \{ padding: 4px; \} \.pill \.t \{ position: absolute;/);
 });
