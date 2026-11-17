@@ -413,3 +413,38 @@ test("names are escaped", () => {
   const out = html(newCard({ entity: "remote.living_room_apple_tv", title: "<b>TV</b>" }));
   assert.match(out, /&lt;b&gt;TV&lt;\/b&gt;/);
 });
+
+test("illustrated header: the screen and the icon follow the state, the box follows the integration, day or night", () => {
+  const atv = html(newCard({ entity: "remote.living_room_apple_tv" }));
+  assert.match(atv, /class="banner s-play"/);
+  assert.match(atv, /<div class="rc-strip"><\/div>/);
+  assert.match(atv, /<image href="data:image\/svg\+xml/, "the artwork on the screen");
+  assert.match(atv, /class="rc-box" x="151" y="70.5"/, "the Apple TV box");
+  assert.match(atv, /class="type-icon">/, "the icon in the active colour");
+  assert.match(atv, /class="hbtns"><button class="key power on"/);
+  const off = html(newCard({ entity: "remote.bedroom_tv_remote" }, makeHass({ "media_player.bedroom_tv": { state: "off" } })));
+  assert.match(off, /class="banner s-off"/);
+  assert.match(off, /class="type-icon off"/);
+  assert.doesNotMatch(off, /class="rc-glow"/);
+  const philips = html(newCard({ entity: "remote.bedroom_tv_remote" }));
+  assert.match(philips, /class="rc-amb"/, "Ambilight on a Philips TV");
+  assert.match(html(newCard({ entity: "remote.kitchen_roku" })), /class="rc-tile sel"/, "the home screen when on and idle");
+  assert.match(html(newCard({ entity: "media_player.attic_fire_tv" })), /class="rc-paused"/);
+  assert.match(html(newCard({ entity: "remote.den_samsung" }, makeHass({ "media_player.den_samsung": { state: "buffering" } }))), /class="type-icon warn"/);
+  assert.match(html(newCard({ entity: "media_player.lounge_lg" }, makeHass({ "media_player.lounge_lg": { state: "unavailable" } }))), /class="type-icon alert"/);
+  // Night: forced, from the sun, else from the dark theme.
+  assert.match(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "night" })), /class="banner s-on night"/);
+  assert.match(html(newCard({ entity: "remote.kitchen_roku" }, makeHass({ "sun.sun": { state: "below_horizon" } }))), /class="banner[^"]* night"/);
+  assert.doesNotMatch(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "day" }, makeHass({}, { themes: { darkMode: true } }))), /class="banner[^"]* night"/);
+  // Each card its own ids; illustration: false keeps the classic header.
+  const a = html(newCard({ entity: "remote.kitchen_roku" }));
+  const b = html(newCard({ entity: "remote.kitchen_roku" }));
+  assert.notEqual(a.match(/id="rc-clip-(\d+)"/)[1], b.match(/id="rc-clip-(\d+)"/)[1]);
+  const classic = html(newCard({ entity: "remote.kitchen_roku", illustration: false }));
+  assert.match(classic, /<div class="header"><span class="type-icon">/);
+  assert.doesNotMatch(classic, /class="banner|rc-scene|\.rc-strip/);
+  // The mini card has the same banner, its detail button beside power.
+  const mini = html(newCard({ entity: "remote.kitchen_roku" }, makeHass(), rc.RemoteMiniCard));
+  assert.match(mini, /class="banner s-on two"/);
+  assert.match(mini, /class="hbtns">[\s\S]*class="zoom"/);
+});

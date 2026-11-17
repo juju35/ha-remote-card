@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2026-11-17
+
+### Features
+- Illustrated header on both cards (90 px): a living-room wall with the title on the left, the TV on its stand with the integration's box (Apple TV, SHIELD, Chromecast, Fire TV, Roku, Freebox Player, Kodi box) and its remote standing on a shelf strip running edge to edge; Philips TVs glow with Ambilight. The screen tells the state: dark with a red standby light when off, the home screen when on, the artwork (or a panning picture) with its progress while playing, a pause sign when paused. The header icon's colour follows the state (blue on, grey off, amber buffering, red unavailable).
+- Day and night pictures following `sun.sun` (else the dark theme), forced with `illustration_theme: day | night`; `illustration: false` keeps the classic header. Both options are in the visual editors, translated in the 22 languages; animations honour `prefers-reduced-motion`.
+
 ## 1.0.0 - 2026-11-14
 
 ### Features

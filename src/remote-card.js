@@ -73,6 +73,11 @@ const STRINGS = {
     zoom_helper: "Button at the top right that unfolds the mini card into the full remote and back",
     zoom_in: "Show the full remote",
     zoom_out: "Show the compact card",
+    illustration: "Illustrated header",
+    illustration_theme: "Illustration theme",
+    theme_auto: "Automatic (sun, then theme)",
+    theme_day: "Day",
+    theme_night: "Night",
   },
   fr: {
     state_on: "Allumé",
@@ -135,6 +140,11 @@ const STRINGS = {
     zoom_helper: "Bouton en haut à droite qui déplie la mini-carte en télécommande complète et inversement",
     zoom_in: "Afficher la télécommande complète",
     zoom_out: "Afficher la carte compacte",
+    illustration: "En-tête illustré",
+    illustration_theme: "Thème de l'illustration",
+    theme_auto: "Automatique (soleil, puis thème)",
+    theme_day: "Jour",
+    theme_night: "Nuit",
   },
   de: {
     state_on: "Ein",
@@ -197,6 +207,11 @@ const STRINGS = {
     zoom_helper: "Schaltfläche oben rechts, die die Mini-Karte zur vollständigen Fernbedienung aufklappt und zurück",
     zoom_in: "Vollständige Fernbedienung anzeigen",
     zoom_out: "Kompakte Karte anzeigen",
+    illustration: "Illustrierte Kopfzeile",
+    illustration_theme: "Thema der Illustration",
+    theme_auto: "Automatisch (Sonne, dann Design)",
+    theme_day: "Tag",
+    theme_night: "Nacht",
   },
   es: {
     state_on: "Encendido",
@@ -259,6 +274,11 @@ const STRINGS = {
     zoom_helper: "Botón arriba a la derecha que despliega la minitarjeta en el mando completo y viceversa",
     zoom_in: "Mostrar el mando completo",
     zoom_out: "Mostrar la tarjeta compacta",
+    illustration: "Encabezado ilustrado",
+    illustration_theme: "Tema de la ilustración",
+    theme_auto: "Automático (sol, luego tema)",
+    theme_day: "Día",
+    theme_night: "Noche",
   },
   it: {
     state_on: "Acceso",
@@ -321,6 +341,11 @@ const STRINGS = {
     zoom_helper: "Pulsante in alto a destra che apre la mini scheda nel telecomando completo e viceversa",
     zoom_in: "Mostra il telecomando completo",
     zoom_out: "Mostra la scheda compatta",
+    illustration: "Intestazione illustrata",
+    illustration_theme: "Tema dell'illustrazione",
+    theme_auto: "Automatico (sole, poi tema)",
+    theme_day: "Giorno",
+    theme_night: "Notte",
   },
   nl: {
     state_on: "Aan",
@@ -383,6 +408,11 @@ const STRINGS = {
     zoom_helper: "Knop rechtsboven die de minikaart uitklapt tot de volledige afstandsbediening en terug",
     zoom_in: "Volledige afstandsbediening tonen",
     zoom_out: "Compacte kaart tonen",
+    illustration: "Geïllustreerde koptekst",
+    illustration_theme: "Thema van de illustratie",
+    theme_auto: "Automatisch (zon, dan thema)",
+    theme_day: "Dag",
+    theme_night: "Nacht",
   },
   pt: {
     state_on: "Ligado",
@@ -445,6 +475,11 @@ const STRINGS = {
     zoom_helper: "Botão no canto superior direito que abre o mini cartão no comando completo e vice-versa",
     zoom_in: "Mostrar o comando completo",
     zoom_out: "Mostrar o cartão compacto",
+    illustration: "Cabeçalho ilustrado",
+    illustration_theme: "Tema da ilustração",
+    theme_auto: "Automático (sol, depois tema)",
+    theme_day: "Dia",
+    theme_night: "Noite",
   },
   pl: {
     state_on: "Włączony",
@@ -507,6 +542,11 @@ const STRINGS = {
     zoom_helper: "Przycisk w prawym górnym rogu rozwijający minikartę do pełnego pilota i z powrotem",
     zoom_in: "Pokaż pełnego pilota",
     zoom_out: "Pokaż kompaktową kartę",
+    illustration: "Ilustrowany nagłówek",
+    illustration_theme: "Motyw ilustracji",
+    theme_auto: "Automatyczny (słońce, potem motyw)",
+    theme_day: "Dzień",
+    theme_night: "Noc",
   },
   sr: {
     state_on: "Укључено",
@@ -569,6 +609,11 @@ const STRINGS = {
     zoom_helper: "Дугме горе десно које отвара мини картицу у пун даљински и назад",
     zoom_in: "Прикажи пун даљински",
     zoom_out: "Прикажи компактну картицу",
+    illustration: "Илустровано заглавље",
+    illustration_theme: "Тема илустрације",
+    theme_auto: "Аутоматски (сунце, па тема)",
+    theme_day: "Дан",
+    theme_night: "Ноћ",
   },
   "sr-Latn": {
     state_on: "Uključeno",
@@ -631,6 +676,11 @@ const STRINGS = {
     zoom_helper: "Dugme gore desno koje otvara mini karticu u pun daljinski i nazad",
     zoom_in: "Prikaži pun daljinski",
     zoom_out: "Prikaži kompaktnu karticu",
+    illustration: "Ilustrovano zaglavlje",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Automatski (sunce, pa tema)",
+    theme_day: "Dan",
+    theme_night: "Noć",
   },
   ro: {
     state_on: "Pornit",
@@ -693,6 +743,11 @@ const STRINGS = {
     zoom_helper: "Buton din dreapta sus care desfășoară mini cardul în telecomanda completă și înapoi",
     zoom_in: "Afișează telecomanda completă",
     zoom_out: "Afișează cardul compact",
+    illustration: "Antet ilustrat",
+    illustration_theme: "Tema ilustrației",
+    theme_auto: "Automat (soare, apoi temă)",
+    theme_day: "Zi",
+    theme_night: "Noapte",
   },
   da: {
     state_on: "Tændt",
@@ -755,6 +810,11 @@ const STRINGS = {
     zoom_helper: "Knap øverst til højre, der folder minikortet ud til den fulde fjernbetjening og tilbage",
     zoom_in: "Vis den fulde fjernbetjening",
     zoom_out: "Vis det kompakte kort",
+    illustration: "Illustreret overskrift",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatisk (sol, derefter tema)",
+    theme_day: "Dag",
+    theme_night: "Nat",
   },
   sv: {
     state_on: "På",
@@ -817,6 +877,11 @@ const STRINGS = {
     zoom_helper: "Knapp uppe till höger som fäller ut minikortet till hela fjärrkontrollen och tillbaka",
     zoom_in: "Visa hela fjärrkontrollen",
     zoom_out: "Visa det kompakta kortet",
+    illustration: "Illustrerad rubrik",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatiskt (sol, sedan tema)",
+    theme_day: "Dag",
+    theme_night: "Natt",
   },
   bg: {
     state_on: "Включено",
@@ -879,6 +944,11 @@ const STRINGS = {
     zoom_helper: "Бутон горе вдясно, който разгъва мини картата в пълното дистанционно и обратно",
     zoom_in: "Покажи пълното дистанционно",
     zoom_out: "Покажи компактната карта",
+    illustration: "Илюстрирано заглавие",
+    illustration_theme: "Тема на илюстрацията",
+    theme_auto: "Автоматично (слънце, после тема)",
+    theme_day: "Ден",
+    theme_night: "Нощ",
   },
   ru: {
     state_on: "Включено",
@@ -941,6 +1011,11 @@ const STRINGS = {
     zoom_helper: "Кнопка в правом верхнем углу, раскрывающая мини-карточку в полный пульт и обратно",
     zoom_in: "Показать полный пульт",
     zoom_out: "Показать компактную карточку",
+    illustration: "Иллюстрированный заголовок",
+    illustration_theme: "Тема иллюстрации",
+    theme_auto: "Автоматически (солнце, затем тема)",
+    theme_day: "День",
+    theme_night: "Ночь",
   },
   uk: {
     state_on: "Увімкнено",
@@ -1003,6 +1078,11 @@ const STRINGS = {
     zoom_helper: "Кнопка вгорі праворуч, що розгортає міні-картку в повний пульт і назад",
     zoom_in: "Показати повний пульт",
     zoom_out: "Показати компактну картку",
+    illustration: "Ілюстрований заголовок",
+    illustration_theme: "Тема ілюстрації",
+    theme_auto: "Автоматично (сонце, потім тема)",
+    theme_day: "День",
+    theme_night: "Ніч",
   },
   hu: {
     state_on: "Be",
@@ -1065,6 +1145,11 @@ const STRINGS = {
     zoom_helper: "Jobb felső gomb, amely a mini kártyát a teljes távirányítóvá nyitja és vissza",
     zoom_in: "Teljes távirányító megjelenítése",
     zoom_out: "Kompakt kártya megjelenítése",
+    illustration: "Illusztrált fejléc",
+    illustration_theme: "Az illusztráció témája",
+    theme_auto: "Automatikus (nap, majd téma)",
+    theme_day: "Nappal",
+    theme_night: "Éjszaka",
   },
   sk: {
     state_on: "Zapnuté",
@@ -1127,6 +1212,11 @@ const STRINGS = {
     zoom_helper: "Tlačidlo vpravo hore, ktoré rozbalí minikartu na úplný ovládač a späť",
     zoom_in: "Zobraziť úplný ovládač",
     zoom_out: "Zobraziť kompaktnú kartu",
+    illustration: "Ilustrovaná hlavička",
+    illustration_theme: "Téma ilustrácie",
+    theme_auto: "Automaticky (slnko, potom téma)",
+    theme_day: "Deň",
+    theme_night: "Noc",
   },
   cs: {
     state_on: "Zapnuto",
@@ -1189,6 +1279,11 @@ const STRINGS = {
     zoom_helper: "Tlačítko vpravo nahoře, které rozbalí minikartu na úplný ovladač a zpět",
     zoom_in: "Zobrazit úplný ovladač",
     zoom_out: "Zobrazit kompaktní kartu",
+    illustration: "Ilustrované záhlaví",
+    illustration_theme: "Motiv ilustrace",
+    theme_auto: "Automaticky (slunce, pak motiv)",
+    theme_day: "Den",
+    theme_night: "Noc",
   },
   sl: {
     state_on: "Vklopljeno",
@@ -1251,6 +1346,11 @@ const STRINGS = {
     zoom_helper: "Gumb zgoraj desno, ki razpre mini kartico v poln daljinec in nazaj",
     zoom_in: "Prikaži poln daljinec",
     zoom_out: "Prikaži kompaktno kartico",
+    illustration: "Ilustrirana glava",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Samodejno (sonce, nato tema)",
+    theme_day: "Dan",
+    theme_night: "Noč",
   },
   lv: {
     state_on: "Ieslēgts",
@@ -1313,6 +1413,11 @@ const STRINGS = {
     zoom_helper: "Poga augšējā labajā stūrī, kas izvērš mini karti pilnā pultī un atpakaļ",
     zoom_in: "Rādīt pilno pulti",
     zoom_out: "Rādīt kompakto karti",
+    illustration: "Ilustrēta galvene",
+    illustration_theme: "Ilustrācijas motīvs",
+    theme_auto: "Automātiski (saule, tad motīvs)",
+    theme_day: "Diena",
+    theme_night: "Nakts",
   },
   el: {
     state_on: "Ενεργό",
@@ -1375,6 +1480,11 @@ const STRINGS = {
     zoom_helper: "Κουμπί πάνω δεξιά που αναπτύσσει τη μίνι κάρτα στο πλήρες τηλεχειριστήριο και πίσω",
     zoom_in: "Εμφάνιση πλήρους τηλεχειριστηρίου",
     zoom_out: "Εμφάνιση συμπαγούς κάρτας",
+    illustration: "Εικονογραφημένη κεφαλίδα",
+    illustration_theme: "Θέμα εικονογράφησης",
+    theme_auto: "Αυτόματο (ήλιος, μετά θέμα)",
+    theme_day: "Ημέρα",
+    theme_night: "Νύχτα",
   },
 };
 
@@ -1696,6 +1806,216 @@ const progress = (s, now = Date.now()) => {
 };
 
 // ---------------------------------------------------------------------------
+// The illustrated header: a living-room wall at the right of a 90 px banner, the TV on its stand, the streaming box
+// of the integration (Apple TV, SHIELD, Chromecast, Fire TV, Roku, Freebox Player, Kodi box…) and its remote standing
+// in front, on a 10 px shelf strip that runs edge to edge. The TV's screen tells the state: dark with a red standby
+// light when off, the home screen when on, the artwork (or a picture panning) while something plays, a pause sign
+// when paused. The left of the banner is the bare wall: the card's text sits there.
+// ---------------------------------------------------------------------------
+
+let rcUid = 0;
+
+// Night picture: forced by illustration_theme, else the sun below the horizon, else Home Assistant's dark mode.
+const isNight = (hass, config) => {
+  if (config.illustration_theme === "night") return true;
+  if (config.illustration_theme === "day") return false;
+  const sun = hass?.states?.["sun.sun"]?.state;
+  if (sun === "below_horizon" || sun === "above_horizon") return sun === "below_horizon";
+  return !!hass?.themes?.darkMode;
+};
+
+// The device drawn next to the TV, from the integration and the device's model: [box, remote].
+const sceneDevice = (ctx) => {
+  const model = `${ctx.device?.manufacturer || ""} ${ctx.device?.model || ""} ${ctx.device?.name || ""}`.toLowerCase();
+  switch (ctx.integration) {
+    case "apple_tv":
+      return ["apple_tv", "siri"];
+    case "androidtv_remote":
+      if (/chromecast|google tv streamer/.test(model)) return ["chromecast", "tv"];
+      return [/shield|nvidia/.test(model) ? "shield" : "android_box", "tv"];
+    case "androidtv":
+      if (/fire|amazon|aft/.test(model)) return [/cube/.test(model) ? "fire_cube" : "fire_stick", "fire"];
+      return ["android_box", "tv"];
+    case "roku":
+      return ["roku", "roku"];
+    case "freebox_player":
+      return ["freebox", "freebox"];
+    case "kodi":
+      return ["kodi", "tv"];
+    default:
+      return ["", "tv"];
+  }
+};
+
+// The boxes, standing on the shelf (y 80) right of the TV, or plugged under it (sticks, Chromecast).
+const RC_BOXES = {
+  apple_tv: `<rect class="rc-box" x="151" y="70.5" width="25" height="9.5" rx="2.8"/><rect class="rc-box-top" x="152.4" y="70.5" width="22.2" height="1.5" rx=".7"/><circle class="rc-dot" cx="172" cy="76" r=".6"/>`,
+  shield: `<path class="rc-box" d="M150 80 153.6 69.5H174.4L178 80Z"/><path class="rc-shield" d="M153.6 69.5H174.4L173.8 71.2H154.2Z"/><circle class="rc-dot green" cx="164" cy="75.5" r=".7"/>`,
+  android_box: `<rect class="rc-box" x="150" y="71.5" width="28" height="8.5" rx="1.6"/><rect class="rc-box-top" x="151" y="71.5" width="26" height="1.3" rx=".6"/><circle class="rc-dot" cx="174" cy="76" r=".6"/>`,
+  fire_cube: `<rect class="rc-box" x="155" y="64" width="17" height="16" rx="2"/><rect class="rc-fire" x="158" y="64" width="11" height="1.4" rx=".7"/>`,
+  roku: `<rect class="rc-box" x="152" y="70" width="22" height="10" rx="3.2"/><rect class="rc-roku" x="174" y="72" width="2.6" height="4.6" rx=".8"/><circle class="rc-dot" cx="163" cy="75" r=".6"/>`,
+  freebox: `<rect class="rc-box" x="147" y="72" width="33" height="8" rx="1.6"/><rect class="rc-box-top" x="148" y="72" width="31" height="1.2" rx=".6"/><rect class="rc-free" x="155" y="75.2" width="8" height="2" rx=".4"/>`,
+  kodi: `<rect class="rc-pc" x="151" y="67" width="26" height="13" rx="1.8"/><rect class="rc-pc-top" x="152" y="67" width="24" height="1.6" rx=".8"/><circle class="rc-dot blue" cx="173" cy="76" r=".7"/>`,
+  // Plugged at the back of the TV: they hang under its bottom right corner.
+  fire_stick: `<rect class="rc-stick" x="124" y="61.5" width="5.5" height="11" rx="1.6"/><circle class="rc-dot blue" cx="126.75" cy="70.4" r=".55"/>`,
+  chromecast: `<path class="rc-cable" d="M127 62v3"/><circle class="rc-cast" cx="127" cy="69" r="4.6"/><circle class="rc-cast-in" cx="127" cy="69" r="1.6"/>`,
+};
+
+// The remotes, standing upright in front of the box: [body, D-pad ring, its centre, the accent key].
+const RC_REMOTES = {
+  siri: ["#c9ccd1", "#1c1c1e", "#2c2c2e", "#2c2c2e"],
+  roku: ["#2b2730", "#6c3c97", "#4a2a68", "#6c3c97"],
+  fire: ["#202226", "#4b5058", "#2c3036", "#00a8e1"],
+  freebox: ["#33363b", "#5a5f67", "#3d4147", "#e5484d"],
+  tv: ["#23262b", "#4c5159", "#33373d", "#e5484d"],
+};
+const remoteSvg = (style) => {
+  const [body, ring, ok, accent] = RC_REMOTES[style] || RC_REMOTES.tv;
+  const keys = [53, 57.5, 62]
+    .map((y) => `<circle cx="188.4" cy="${y}" r="1.25" fill="${ring}"/><circle cx="193.6" cy="${y}" r="1.25" fill="${ring}"/>`)
+    .join("");
+  const colours = style === "tv" ? `<g class="rc-colours">${["#e5484d", "#43a047", "#f2c200", "#2f80ed"].map((c, i) => `<rect x="${186.9 + i * 2.2}" y="67" width="1.6" height="1.1" rx=".4" fill="${c}"/>`).join("")}</g>` : "";
+  return `<g class="rc-remote"><rect x="185" y="40" width="12" height="40" rx="3" fill="${body}"/><rect class="rc-remote-edge" x="185.6" y="40.6" width="10.8" height="1.6" rx=".8"/>
+    <circle cx="191" cy="46.4" r="3.9" fill="${ring}"/><circle cx="191" cy="46.4" r="1.6" fill="${ok}"/><circle cx="194.6" cy="41.9" r=".6" fill="${accent}"/>
+    ${keys}${colours}</g>`;
+};
+
+// Rolling hills on the screen, repeating every 60 (the length the picture pans by), from x0 to past the screen.
+const rcWave = (x0, y, amp) => {
+  let d = `M${x0} ${y}`;
+  for (let x = x0; x < 200; x += 60) d += `C${x + 20} ${y - amp} ${x + 40} ${y - amp} ${x + 60} ${y}`;
+  return `${d}V60H${x0}Z`;
+};
+
+// The whole picture (220 × 80, the shelf at y 80). `uid` keeps each card's ids apart on a page with several cards.
+const sceneSvg = (uid, { mode, paused, pic, pct, ambilight, box, remote }) => {
+  const screen = 'x="39" y="9" width="96" height="51"';
+  const show =
+    mode === "show"
+      ? pic
+        ? `<image href="${esc(pic)}" ${screen} preserveAspectRatio="xMidYMid slice"/>`
+        : `<rect ${screen} fill="url(#rc-air-${uid})"/><circle class="rc-sun" cx="114" cy="22" r="5"/><g class="rc-pan"><path class="rc-hill far" d="${rcWave(39, 47, 10)}"/><path class="rc-hill" d="${rcWave(9, 53, 6)}"/></g>`
+      : "";
+  const home =
+    mode === "home"
+      ? `<rect ${screen} fill="url(#rc-home-${uid})"/><rect class="rc-ui" x="44" y="14" width="22" height="2" rx="1"/>${[0, 1, 2, 3]
+          .map((i) => `<rect class="rc-tile${i === 1 ? " sel" : ""}" x="${44 + i * 22.5}" y="36" width="19" height="13" rx="2"/>`)
+          .join("")}`
+      : "";
+  const bar = mode === "show" && pct != null ? `<rect class="rc-bar" x="44" y="55" width="86" height="1.6" rx=".8"/><rect class="rc-bar-on" x="44" y="55" width="${((86 * pct) / 100).toFixed(1)}" height="1.6" rx=".8"/>` : "";
+  const ir = [0, 1, 2].map((i) => `<path class="rc-ir i${i}" d="M${182.6 - i * 2.6} ${41 - i * 1.6}q-${2 + i} ${3.4 + i * 1.6} 0 ${6.8 + i * 3.2}"/>`).join("");
+  return `<svg class="rc-scene" viewBox="0 0 220 80" preserveAspectRatio="xMaxYMax meet" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id="rc-clip-${uid}"><rect ${screen}/></clipPath>
+      <linearGradient id="rc-air-${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="rc-air-a"/><stop offset="1" class="rc-air-b"/></linearGradient>
+      <linearGradient id="rc-home-${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3f6e"/><stop offset="1" stop-color="#4a6fb3"/></linearGradient>
+      <radialGradient id="rc-glow-${uid}"><stop offset="0" class="rc-glow-a"/><stop offset="1" class="rc-glow-b"/></radialGradient>
+      <filter id="rc-blur-${uid}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
+    </defs>
+    <g class="rc-window"><rect class="rc-pane" x="4" y="8" width="24" height="32" rx="1.5"/><circle class="rc-day rc-wsun" cx="21" cy="18" r="3"/>
+      <g class="rc-night"><circle class="rc-moon" cx="21" cy="17" r="2.6"/><circle class="rc-star" cx="9" cy="14" r=".5"/><circle class="rc-star" cx="13" cy="28" r=".45"/><circle class="rc-star" cx="25" cy="31" r=".4"/></g>
+      <path class="rc-frame" d="M16 8V40M4 24H28"/><rect class="rc-frame-o" x="4" y="8" width="24" height="32" rx="1.5"/><rect class="rc-sill" x="2" y="40" width="28" height="2" rx=".6"/></g>
+    ${mode === "off" ? "" : `<ellipse class="rc-glow" cx="87" cy="35" rx="74" ry="40" fill="url(#rc-glow-${uid})"/>`}
+    ${ambilight && mode !== "off" ? `<rect class="rc-amb" x="34" y="4" width="106" height="61" rx="4" filter="url(#rc-blur-${uid})"/>` : ""}
+    <path class="rc-neck" d="M83.5 63H90.5L89.4 77H84.6Z"/><rect class="rc-foot" x="69" y="76.4" width="36" height="3.6" rx="1.4"/>
+    <rect class="rc-bezel" x="36" y="6" width="102" height="57" rx="2.2"/>
+    <rect class="rc-screen" ${screen}/>
+    <g clip-path="url(#rc-clip-${uid})">${show}${home}${bar}
+      ${paused ? `<g class="rc-paused"><circle cx="87" cy="34.5" r="7"/><rect x="84" y="31" width="2.2" height="7" rx=".6"/><rect x="87.8" y="31" width="2.2" height="7" rx=".6"/></g>` : ""}
+      <path class="rc-shine" d="M39 9H79L54 60H39Z"/></g>
+    <circle class="rc-led" cx="87" cy="61.6" r=".75"/>
+    ${RC_BOXES[box] || ""}
+    ${remoteSvg(remote)}
+    <g class="rc-signal">${ir}</g>
+    <g class="rc-plant"><path class="rc-leaf" d="M210 66C203 60 202 52 204 47 208 52 210 58 210 66Z"/><path class="rc-leaf b" d="M210 66C211 57 214 50 219 47 219 55 215 62 210 66Z"/><path class="rc-leaf" d="M210 66C209 58 210 50 212 44 214 51 213 59 210 66Z"/><path class="rc-pot" d="M204.5 66H215.5L214 80H206Z"/></g>
+  </svg>`;
+};
+
+// The banner: the wall, the shelf strip, the text on the left and the keys at the top right. The colours of the
+// picture, day and night, and its animations (the picture panning on the screen and the light of the TV breathing
+// on the wall while it plays, the remote's signal, the stars).
+const BANNER_STYLE = `
+  .banner { position: relative; height: 90px; overflow: hidden; color: #2a2722; --rc-sky-muted: #6b645a; --rc-on: #2f80ed;
+            background: linear-gradient(90deg, #f8f5f0 0%, #f2eee8 52%, #ebe5dc 100%); }
+  .banner.night { color: #fff; --rc-sky-muted: rgba(255,255,255,.78); --rc-on: #8fbaff;
+                  background: linear-gradient(90deg, #333a4f 0%, #2a2f3d 52%, #222633 100%); }
+  .rc-strip { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: #e9e4dc;
+              box-shadow: inset 0 2px 0 #fff, inset 0 -2px 0 #cfc7bb; }
+  .night .rc-strip { background: #3a3f4c; box-shadow: inset 0 2px 0 #4a5060, inset 0 -2px 0 #30343f; }
+  .rc-scene { position: absolute; right: 0; bottom: 10px; height: 80px; width: min(52cqw, 220px); overflow: hidden; }
+  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(52cqw, 220px) + 4px);
+           display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .htext .titles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .htext .name { font-size: 16px; font-weight: 600; }
+  .htext .sub { color: var(--rc-sky-muted); }
+  .htext .eq i { background: var(--rc-on); }
+  /* The round icon, its colour the state: blue on, grey off, amber buffering, red unavailable. */
+  .banner .type-icon { background: rgba(255,255,255,.66); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+  .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .banner .type-icon .icon { fill: var(--rc-on); }
+  .banner .type-icon.off .icon { fill: #8a8f98; }
+  .banner.night .type-icon.off .icon { fill: #a3a9b4; }
+  .banner .type-icon.warn .icon { fill: var(--warning-color, #ffa600); }
+  .banner .type-icon.alert .icon { fill: var(--error-color, #db4437); }
+  .hbtns { position: absolute; top: 6px; right: 6px; display: flex; gap: 6px; }
+  .hbtns .key.power, .hbtns .zoom { width: 32px; height: 32px; color: #2a2722; background: rgba(255,255,255,.6); border-color: rgba(0,0,0,.1); }
+  .night .hbtns .key.power, .night .hbtns .zoom { color: #fff; background: rgba(16,20,32,.45); border-color: rgba(255,255,255,.16); }
+  .hbtns .key.power.on { color: var(--rc-on); border-color: color-mix(in srgb, var(--rc-on) 60%, transparent); }
+  .hbtns .key.power:hover, .hbtns .zoom:hover { background: rgba(255,255,255,.8); }
+  .night .hbtns .key.power:hover, .night .hbtns .zoom:hover { background: rgba(16,20,32,.65); }
+  /* Narrow card: no room for the picture beside the text, the bare wall stays. */
+  @container (max-width: 300px) { .rc-scene { display: none; } .htext { right: 44px; } .banner.two .htext { right: 82px; } }
+  .rc-night, .night .rc-day { display: none; }
+  .night .rc-night { display: inline; }
+  .rc-pane { fill: #bfe0f7; } .night .rc-pane { fill: #1b2f52; }
+  .rc-wsun { fill: #ffd65a; } .rc-moon { fill: #f3eed2; } .rc-star { fill: #fff; animation: rc-twinkle 3s ease-in-out infinite alternate; }
+  .rc-frame { stroke: #fff; stroke-width: 1.3; fill: none; } .rc-frame-o { fill: none; stroke: #fff; stroke-width: 1.6; }
+  .night .rc-frame, .night .rc-frame-o { stroke: #4a5568; }
+  .rc-sill { fill: #e2dbcf; } .night .rc-sill { fill: #434a5b; }
+  .rc-glow-a { stop-color: #7fb2ff; stop-opacity: .42; } .rc-glow-b { stop-color: #7fb2ff; stop-opacity: 0; }
+  .night .rc-glow-a { stop-opacity: .6; }
+  .rc-glow { transform-box: fill-box; transform-origin: center; }
+  .s-play .rc-glow { animation: rc-breathe 4s ease-in-out infinite; }
+  .rc-amb { fill: #ff9a4d; opacity: .75; } .night .rc-amb { opacity: .95; }
+  .s-play .rc-amb { animation: rc-amb 6s ease-in-out infinite; }
+  .rc-bezel { fill: #1b1d22; } .night .rc-bezel { fill: #22252c; stroke: #4c5364; stroke-width: .6; }
+  .night .rc-remote > rect:first-child, .night .rc-box, .night .rc-stick { stroke: rgba(255,255,255,.22); stroke-width: .5; } .rc-screen { fill: #15181e; } .night .rc-screen { fill: #0d0f14; }
+  .rc-neck, .rc-foot { fill: #3a3e46; } .night .rc-neck, .night .rc-foot { fill: #1f2228; }
+  .rc-shine { fill: #fff; opacity: .05; }
+  .rc-led { fill: #e5484d; } .s-on .rc-led, .s-play .rc-led, .s-pause .rc-led, .s-buffer .rc-led { fill: #fff; opacity: .55; }
+  .s-alert .rc-led { animation: rc-blink 1.6s steps(2, jump-none) infinite; }
+  .rc-air-a { stop-color: #5aa2e6; } .rc-air-b { stop-color: #c9e6f8; }
+  .rc-sun { fill: #ffe08a; } .rc-hill { fill: #3f8f5a; } .rc-hill.far { fill: #79b77f; }
+  .s-play .rc-pan, .s-on .rc-pan { animation: rc-pan 14s linear infinite; }
+  .rc-ui { fill: rgba(255,255,255,.7); }
+  .rc-tile { fill: rgba(255,255,255,.22); } .rc-tile.sel { fill: rgba(255,255,255,.85); }
+  .rc-bar { fill: rgba(255,255,255,.35); } .rc-bar-on { fill: #fff; }
+  .rc-paused circle { fill: rgba(0,0,0,.45); } .rc-paused rect { fill: #fff; }
+  .rc-box { fill: #1d1e22; } .night .rc-box { fill: #111215; }
+  .rc-box-top { fill: #3a3b40; } .night .rc-box-top { fill: #26272c; }
+  .rc-shield { fill: #76b900; } .rc-fire { fill: #00a8e1; } .rc-roku { fill: #6c3c97; } .rc-free { fill: #e5484d; opacity: .85; }
+  .rc-pc { fill: #c9ced6; } .rc-pc-top { fill: #e3e7ec; } .night .rc-pc { fill: #7d848f; } .night .rc-pc-top { fill: #969ca6; }
+  .rc-stick { fill: #1d1e22; } .rc-cast { fill: #f1f1ee; stroke: #c9c9c4; stroke-width: .5; } .rc-cast-in { fill: #d9d9d4; }
+  .night .rc-cast { fill: #c2c4c6; }
+  .rc-cable { stroke: #3a3e46; stroke-width: 1; }
+  .rc-dot { fill: #fff; opacity: .7; } .rc-dot.green { fill: #76b900; opacity: 1; } .rc-dot.blue { fill: #4fc3f7; opacity: 1; }
+  .s-off .rc-dot, .s-alert .rc-dot { opacity: 0; }
+  .rc-remote-edge { fill: rgba(255,255,255,.18); }
+  .rc-ir { fill: none; stroke: var(--rc-on); stroke-width: 1; stroke-linecap: round; opacity: 0; }
+  .s-play .rc-ir, .s-on .rc-ir { animation: rc-ir 3.6s ease-out infinite; }
+  .rc-ir.i1 { animation-delay: .15s !important; } .rc-ir.i2 { animation-delay: .3s !important; }
+  .rc-pot { fill: #c98b5e; } .night .rc-pot { fill: #7a5a42; }
+  .rc-leaf { fill: #5aa86a; } .rc-leaf.b { fill: #7cc07f; } .night .rc-leaf { fill: #2f5e3e; } .night .rc-leaf.b { fill: #3d7250; }
+  @keyframes rc-breathe { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .65; transform: scale(.94); } }
+  @keyframes rc-amb { 0%, 100% { fill: #ff9a4d; } 33% { fill: #c46bff; } 66% { fill: #4fa8ff; } }
+  @keyframes rc-pan { to { transform: translateX(-60px); } }
+  @keyframes rc-ir { 0%, 70% { opacity: 0; } 76% { opacity: .9; } 92%, 100% { opacity: 0; } }
+  @keyframes rc-blink { 0% { opacity: 1; } 100% { opacity: .15; } }
+  @keyframes rc-twinkle { from { opacity: .35; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .rc-scene * { animation: none !important; } }
+`;
+
+// ---------------------------------------------------------------------------
 // DOM patching: the new HTML is applied onto the elements there are, so that nothing is replaced that did not
 // change (a running animation, the key under the finger, the focus).
 // ---------------------------------------------------------------------------
@@ -1764,6 +2084,10 @@ const BASE_STYLE = `
   .type-icon .icon { width: 24px; height: 24px; fill: var(--rc-fg); transition: fill .2s ease; }
   .type-icon.off { background: color-mix(in srgb, var(--rc-idle) 14%, transparent); }
   .type-icon.off .icon { fill: var(--secondary-text-color); }
+  .type-icon.warn { background: color-mix(in srgb, var(--warning-color, #ffa600) 16%, transparent); }
+  .type-icon.warn .icon { fill: var(--warning-color, #ffa600); }
+  .type-icon.alert { background: color-mix(in srgb, var(--error-color, #db4437) 14%, transparent); }
+  .type-icon.alert .icon { fill: var(--error-color, #db4437); }
   .warning { padding: 16px; color: color-mix(in srgb, var(--warning-color, #ffa600) 50%, var(--primary-text-color)); }
   /* Keys: outlined smoked glass, never filled; the accent marks an active state (on, muted, playing). */
   .key { all: unset; box-sizing: border-box; display: grid; place-items: center; cursor: pointer; color: var(--primary-text-color);
@@ -1889,9 +2213,10 @@ const MINI_STYLE = `
   .mini-keys { display: flex; gap: 4px; flex: none; margin-left: auto; }
   .mini-keys .narrow-only { display: none; }
   @container (max-width: 250px) {
-    .mini-keys .wide-only, .header .key.power { display: none; }
+    .mini-keys .wide-only, .header .key.power, .hbtns .key.power { display: none; }
     .mini-keys .narrow-only { display: grid; }
     .art { display: none; }
+    .banner.two .htext { right: 44px; }
   }
 `;
 
@@ -1948,6 +2273,7 @@ class RemoteCard extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this._html = "";
+    this._uid = ++rcUid;
     const root = this.shadowRoot;
     root.addEventListener("click", (ev) => this._onClick(ev));
     root.addEventListener("pointerdown", (ev) => this._onDown(ev));
@@ -1996,12 +2322,12 @@ class RemoteCard extends HTMLElement {
     return this._hass;
   }
 
-  // What a render reads from hass: the registries, the language and the states of the remote and the player.
+  // What a render reads from hass: the registries, the language, day or night and the states of the remote and the player.
   _deps() {
     const h = this._hass;
     if (!h || !this._config) return null;
     const r = resolve(h, this._config);
-    return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, h.states[r.remote], h.states[r.mp]];
+    return [h.entities, h.devices, h.language, h.locale, h.themes?.darkMode, h.states["sun.sun"]?.state, h.states[r.remote], h.states[r.mp]];
   }
 
   connectedCallback() {
@@ -2209,9 +2535,16 @@ class RemoteCard extends HTMLElement {
     const on = !!s && !OFF_STATES.has(s.state);
     const a = (on && mpState?.attributes) || {};
     const episode = a.media_season && a.media_episode ? `S${a.media_season} · E${a.media_episode}` : "";
+    const st = mpState?.state;
     return {
       known: !!s,
       on,
+      paused: on && st === "paused",
+      buffering: on && st === "buffering",
+      // The icon's colour: blue on, grey off, amber buffering, red unavailable.
+      status: s?.state === "unavailable" ? "alert" : on && st === "buffering" ? "warn" : on ? "" : "off",
+      // The picture's state: playing (the screen pans, the TV's light breathes), paused, on, off, unavailable.
+      scene: s?.state === "unavailable" ? "alert" : !on ? "off" : st === "playing" ? "play" : st === "paused" ? "pause" : st === "buffering" ? "buffer" : "on",
       state: this._t(`state_${k}`),
       app: a.app_name || a.source || "",
       title: a.media_title || a.media_channel || "",
@@ -2239,19 +2572,33 @@ class RemoteCard extends HTMLElement {
     return [app, m.title].filter(Boolean).join(" · ") || m.state;
   }
 
+  // The header: the illustration (the title and the subtitle on its wall, power and the detail button at its top
+  // right), or the classic header with `illustration: false`.
   _header(ctx, m, sub) {
     const entity = ctx.mp || ctx.remote;
     const more = entity ? ` role="button" tabindex="0" data-action="more_info" data-entity="${esc(entity)}"` : "";
     const power = this._show("show_power") ? this._key(ctx, "power", { cls: "key power", on: m.on, title: m.known ? `${this._t("k_power")} · ${m.state}` : "" }) : "";
-    return `<div class="header">
-        <span class="type-icon${m.known && !m.on ? " off" : ""}">${svgIcon(ICONS.tv)}</span>
-        <div class="titles"${more}>
+    const icon = `<span class="type-icon${m.status ? ` ${m.status}` : ""}">${svgIcon(ICONS.tv)}</span>`;
+    const titles = `<div class="titles"${more}>
           ${this._show("show_title") ? `<div class="name">${esc(this._name(ctx))}</div>` : ""}
           ${sub && this._show("show_subtitle") ? `<div class="sub">${sub}</div>` : ""}
-        </div>
-        ${power}
-        ${this._zoomButton()}
-      </div>`;
+        </div>`;
+    const zoom = this._zoomButton();
+    if (this._config.illustration === false) return `<div class="header">${icon}${titles}${power}${zoom}</div>`;
+    const cls = `banner s-${m.scene}${isNight(this._hass, this._config) ? " night" : ""}${power && zoom ? " two" : ""}`;
+    return `<div class="${cls}" data-k="banner"><div class="rc-strip"></div>${this._scene(ctx, m)}<div class="htext">${icon}${titles}</div>${power || zoom ? `<div class="hbtns">${power}${zoom}</div>` : ""}</div>`;
+  }
+
+  // The picture of the banner: what the TV's screen shows, the box and the remote of the integration.
+  _scene(ctx, m) {
+    const [box, remote] = sceneDevice(ctx);
+    const mode = !m.on ? "off" : m.playing || m.paused || m.buffering || m.title ? "show" : "home";
+    return sceneSvg(this._uid, { mode, paused: m.paused, pic: m.pic, pct: m.progress?.pct, ambilight: ctx.integration === "philips_js", box, remote });
+  }
+
+  // The banner's styles, only when it is shown.
+  _bannerStyle() {
+    return this._config.illustration === false ? "" : BANNER_STYLE;
   }
 
   _zoomButton() {
@@ -2373,7 +2720,7 @@ class RemoteCard extends HTMLElement {
     const m = this._media(ctx);
     const nav = ["back", "home", "menu"].map((k) => this._key(ctx, k)).join("");
     const sub = this._subtitle(m, ctx);
-    return `<style>${BASE_STYLE}${FULL_STYLE}</style>
+    return `<style>${BASE_STYLE}${FULL_STYLE}${this._bannerStyle()}</style>
       <ha-card${this._hass.themes?.darkMode ? ' class="dark"' : ""}>
         ${this._header(ctx, m, sub ? `${m.on ? this._eq(m) : ""}<span>${esc(sub)}</span>` : "")}
         ${m.progress && this._show("show_subtitle") ? `<div class="progress" data-k="progress">${this._track(m.progress)}</div>` : ""}
@@ -2466,7 +2813,7 @@ class RemoteMiniCard extends RemoteCard {
       this._show("show_volume") ? this._volume(ctx, "key small wide-only") : "",
     ].join("");
     const sub = !m.known ? INTEGRATIONS[ctx.integration].name : m.on ? m.app || m.state : m.state;
-    return `<style>${BASE_STYLE}${MINI_STYLE}</style>
+    return `<style>${BASE_STYLE}${MINI_STYLE}${this._bannerStyle()}</style>
       <ha-card${this._hass.themes?.darkMode ? ' class="dark"' : ""}>
         ${this._header(ctx, m, sub ? `<span>${esc(sub)}</span>` : "")}
         <div class="content">
@@ -2508,6 +2855,7 @@ const LANGUAGES = [
 
 // [name, default] of the switches of the full card's editor.
 const TOGGLES = [
+  ["illustration", true],
   ["show_title", true],
   ["show_subtitle", true],
   ["show_power", true],
@@ -2520,6 +2868,9 @@ const TOGGLES = [
   ["repeat", true],
   ["swipe", false],
 ];
+
+// The illustration's day / night choice; "auto" follows the sun, then Home Assistant's theme.
+const THEMES = ["auto", "day", "night"];
 
 // Keeps the YAML minimal: drops empty values and options left at their default.
 const cleanConfig = (value, defaults) => {
@@ -2558,6 +2909,7 @@ class RemoteCardEditor extends HTMLElement {
         selector: { select: { mode: "dropdown", options: [{ value: "", label: tr("integration_auto") }, ...integrations, { value: "generic", label: tr("integration_generic") }] } },
       },
       { name: "title", selector: { text: {} } },
+      { name: "illustration_theme", selector: { select: { mode: "dropdown", options: THEMES.map((v) => ({ value: v, label: tr(`theme_${v}`) })) } } },
       { type: "grid", name: "", schema: this.constructor.toggles.map(([name]) => ({ name, selector: { boolean: {} } })) },
       {
         name: "language",
@@ -2569,7 +2921,7 @@ class RemoteCardEditor extends HTMLElement {
   _render() {
     if (!this._hass || !this._config) return;
     const toggles = this.constructor.toggles;
-    const defaults = Object.fromEntries(toggles);
+    const defaults = { ...Object.fromEntries(toggles), illustration_theme: "auto" };
     if (!this._form) {
       this._form = document.createElement("ha-form");
       this._form.computeLabel = (s) => t(this._hass, this._config, s.name);
@@ -2582,7 +2934,7 @@ class RemoteCardEditor extends HTMLElement {
       this.appendChild(this._form);
     }
     const data = { ...this._config };
-    for (const [name, def] of toggles) if (data[name] === undefined) data[name] = def;
+    for (const [name, def] of Object.entries(defaults)) if (data[name] === undefined) data[name] = def;
     this._form.hass = this._hass;
     if (!sameDeps(this._dataDeps, [this._config])) {
       this._dataDeps = [this._config];

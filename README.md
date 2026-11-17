@@ -133,6 +133,7 @@ type: custom:remote-card
 entity: remote.living_room_apple_tv
 media_player: media_player.living_room_apple_tv
 title: Living room
+illustration_theme: auto
 show_channels: false
 swipe: true
 apps:
@@ -173,6 +174,8 @@ zoom: true
 | `media_player` | both | Same device | Media player shown (what is playing, sources, volume, power state); found on the remote's device when left out |
 | `integration` | both | Detected | Forces the key mapping: `apple_tv`, `androidtv_remote`, `philips_js`, `samsungtv`, `webostv`, `roku`, `androidtv`, `freebox_player`, `kodi` or `generic` (media player only) |
 | `title` | both | Device name | Card title |
+| `illustration` | both | `true` | Illustrated header: a living room with the TV, the integration's box and remote on a shelf; the screen shows the state (off, home screen, what is playing, paused). `false` keeps the classic header |
+| `illustration_theme` | both | `auto` | `day`, `night`, or `auto`: night while `sun.sun` is below the horizon, else with a dark theme |
 | `show_title` | both | `true` | Show the title in the header |
 | `show_subtitle` | both | `true` | Show what is playing (or the state) under the title, and the progress bar |
 | `show_power` | both | `true` | Power key |
@@ -244,7 +247,7 @@ Narrow widths: the full card at 238 px (back / home / menu, volume and channels 
 
 ### Animation
 
-While the TV plays, three bars dance next to what is playing and the progress bar moves on between two updates of Home Assistant; they stop when it is paused, and honour `prefers-reduced-motion`:
+While the TV plays, three bars dance next to what is playing and the progress bar moves on between two updates of Home Assistant; they stop when it is paused, and honour `prefers-reduced-motion`. In the illustrated header the picture pans on the TV's screen, the TV's light breathes on the wall and the remote sends its signal:
 
 | Light | Dark |
 |---|---|
