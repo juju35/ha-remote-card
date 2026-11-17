@@ -435,10 +435,15 @@ test("illustrated header: the screen and the icon follow the state, the box foll
   assert.match(html(newCard({ entity: "media_player.attic_fire_tv" })), /class="rc-paused"/);
   assert.match(html(newCard({ entity: "remote.den_samsung" }, makeHass({ "media_player.den_samsung": { state: "buffering" } }))), /class="type-icon warn"[\s\S]*class="pill warn" title="Buffering"/);
   assert.match(html(newCard({ entity: "media_player.lounge_lg" }, makeHass({ "media_player.lounge_lg": { state: "unavailable" } }))), /class="type-icon alert"/);
-  // Night: forced, from the sun, else from the dark theme.
+  // Night: forced, else the sun below the horizon or the dark theme (even with the sun up).
   assert.match(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "night" })), /class="banner s-on night"/);
   assert.match(html(newCard({ entity: "remote.kitchen_roku" }, makeHass({ "sun.sun": { state: "below_horizon" } }))), /class="banner[^"]* night"/);
   assert.doesNotMatch(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "day" }, makeHass({}, { themes: { darkMode: true } }))), /class="banner[^"]* night"/);
+  const sunUp = { "sun.sun": { state: "above_horizon" } };
+  assert.match(html(newCard({ entity: "remote.kitchen_roku" }, makeHass(sunUp, { themes: { darkMode: true } }))), /class="banner[^"]* night"/);
+  assert.doesNotMatch(html(newCard({ entity: "remote.kitchen_roku" }, makeHass(sunUp, { themes: { darkMode: false } }))), /class="banner[^"]* night"/);
+  assert.doesNotMatch(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "day" }, makeHass(sunUp, { themes: { darkMode: true } }))), /class="banner[^"]* night"/);
+  assert.match(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "night" }, makeHass(sunUp, { themes: { darkMode: false } }))), /class="banner[^"]* night"/);
   // Each card its own ids; illustration: false keeps the classic header.
   const a = html(newCard({ entity: "remote.kitchen_roku" }));
   const b = html(newCard({ entity: "remote.kitchen_roku" }));

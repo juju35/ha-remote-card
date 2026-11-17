@@ -1815,12 +1815,13 @@ const progress = (s, now = Date.now()) => {
 
 let rcUid = 0;
 
-// Night picture: forced by illustration_theme, else the sun below the horizon, else Home Assistant's dark mode.
+// Night picture: forced by illustration_theme, else the sun below the horizon OR Home Assistant's dark mode (the dark
+// theme wins even while the sun is up; with no usable sun.sun the dark mode alone decides).
 const isNight = (hass, config) => {
   if (config.illustration_theme === "night") return true;
   if (config.illustration_theme === "day") return false;
   const sun = hass?.states?.["sun.sun"]?.state;
-  if (sun === "below_horizon" || sun === "above_horizon") return sun === "below_horizon";
+  if (sun === "below_horizon" || sun === "above_horizon") return sun === "below_horizon" || !!hass?.themes?.darkMode;
   return !!hass?.themes?.darkMode;
 };
 
