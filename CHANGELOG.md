@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0 - 2026-11-17
+
+### Features
+- Illustrated header on both cards (90 px): a living-room wall with the title on the left, the TV on its stand with the integration's box (Apple TV, SHIELD, Chromecast, Fire TV, Roku, Freebox Player, Kodi box) and its remote standing on a shelf strip running edge to edge; Philips TVs glow with Ambilight. The screen tells the state: dark with a red standby light when off, the home screen when on, the artwork (or a panning picture) with its progress while playing, a pause sign when paused. The header icon's colour follows the state (blue on, grey off, amber buffering, red unavailable).
+- Day and night pictures night after sunset (`sun.sun`) or with the dark theme, forced with `illustration_theme: day | night`; `illustration: false` keeps the classic header. Both options are in the visual editors, translated in the 22 languages; animations honour `prefers-reduced-motion`.
+- **Status pill** right after the title on both cards (illustration on and off): a dot and the state (Playing, Paused, On, Off, Buffering, Unavailable…) in the colour of the header icon; the subtitle no longer repeats the state. It stays beside the title only while the whole title and the pill's whole label fit on that row (measured in the real fonts, so in every language); otherwise it takes its own line under a one-line subtitle, and keeps only its dot when even that would not fit above the ground strip or on a card of 200 px or less.
+- The header's power and expand / collapse buttons are 24 px frosted rounds on one line in the top right corner (the detail button last), on the banner and on the classic header, instead of larger buttons in the middle of the header.
+
+### Fixes
+- Night picture with the dark theme even while the sun is up (`illustration_theme: auto`): the header is night when `sun.sun` is below the horizon or Home Assistant's theme is dark; `day` / `night` still force it.
+
 ## 1.0.0 - 2026-11-14
 
 ### Features

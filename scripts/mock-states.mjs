@@ -7,7 +7,7 @@ const iso = (ms) => new Date(ms).toISOString();
 // A 400×400 poster drawn in SVG, standing for the artwork of the media playing.
 const poster = (a, b) =>
   `data:image/svg+xml;base64,${Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="40" height="40" fill="url(#g)"/><circle cx="28" cy="13" r="6" fill="#fff" fill-opacity=".55"/><path d="M0 34 L12 20 L22 30 L28 24 L40 36 V40 H0Z" fill="#000" fill-opacity=".28"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="40" height="40" fill="url(#g)"/><circle cx="28" cy="13" r="6" fill="#fff" fill-opacity=".55"/><path d="M0 34 L12 20 L22 30 L28 24 L40 36 V40 H0Z" fill="#000" fill-opacity=".28"/></svg>`,
   ).toString("base64")}`;
 export const POSTER = poster("#5b4bdb", "#e0567a");
 
