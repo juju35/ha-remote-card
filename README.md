@@ -175,7 +175,7 @@ zoom: true
 | `integration` | both | Detected | Forces the key mapping: `apple_tv`, `androidtv_remote`, `philips_js`, `samsungtv`, `webostv`, `roku`, `androidtv`, `freebox_player`, `kodi` or `generic` (media player only) |
 | `title` | both | Device name | Card title |
 | `illustration` | both | `true` | Illustrated header: a living room with the TV, the integration's box and remote on a shelf; the screen shows the state (off, home screen, what is playing, paused). `false` keeps the classic header |
-| `illustration_theme` | both | `auto` | `day`, `night`, or `auto`: night while `sun.sun` is below the horizon or with a dark theme, even with the sun up |
+| `illustration_theme` | both | `auto` | `day`, `night`, or `auto` (follows the Home Assistant theme: night with a dark theme, day with a light theme) |
 | `show_title` | both | `true` | Show the title in the header |
 | `show_subtitle` | both | `true` | Show what is playing (or the state) under the title, and the progress bar |
 | `show_power` | both | `true` | Power key |
