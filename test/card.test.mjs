@@ -301,7 +301,10 @@ test("header: the device name, what is playing as subtitle, power on the right w
   const off = html(newCard({ entity: "remote.bedroom_tv_remote" }, makeHass({ "media_player.bedroom_tv": { state: "off" } })));
   assert.match(off, /class="type-icon off"/);
   assert.match(off, /class="key power" data-key="power"/);
-  assert.match(off, /class="sub"><span>Off<\/span>/);
+  // The state in the pill after the name, in the icon's colour, not repeated in the subtitle.
+  assert.match(off, /<div class="trow"><div class="name">[^<]*<\/div><span class="pill off" title="Off">/);
+  assert.doesNotMatch(off, /class="sub"/);
+  assert.match(out, /<span class="pill on" title="Playing">/);
   assert.doesNotMatch(off, /class="eq/);
   // On, not playing: no dancing bars, the source and the channel.
   const tv = html(newCard({ entity: "remote.bedroom_tv_remote" }));
@@ -430,7 +433,7 @@ test("illustrated header: the screen and the icon follow the state, the box foll
   assert.match(philips, /class="rc-amb"/, "Ambilight on a Philips TV");
   assert.match(html(newCard({ entity: "remote.kitchen_roku" })), /class="rc-tile sel"/, "the home screen when on and idle");
   assert.match(html(newCard({ entity: "media_player.attic_fire_tv" })), /class="rc-paused"/);
-  assert.match(html(newCard({ entity: "remote.den_samsung" }, makeHass({ "media_player.den_samsung": { state: "buffering" } }))), /class="type-icon warn"/);
+  assert.match(html(newCard({ entity: "remote.den_samsung" }, makeHass({ "media_player.den_samsung": { state: "buffering" } }))), /class="type-icon warn"[\s\S]*class="pill warn" title="Buffering"/);
   assert.match(html(newCard({ entity: "media_player.lounge_lg" }, makeHass({ "media_player.lounge_lg": { state: "unavailable" } }))), /class="type-icon alert"/);
   // Night: forced, from the sun, else from the dark theme.
   assert.match(html(newCard({ entity: "remote.kitchen_roku", illustration_theme: "night" })), /class="banner s-on night"/);
@@ -441,7 +444,8 @@ test("illustrated header: the screen and the icon follow the state, the box foll
   const b = html(newCard({ entity: "remote.kitchen_roku" }));
   assert.notEqual(a.match(/id="rc-clip-(\d+)"/)[1], b.match(/id="rc-clip-(\d+)"/)[1]);
   const classic = html(newCard({ entity: "remote.kitchen_roku", illustration: false }));
-  assert.match(classic, /<div class="header"><span class="type-icon">/);
+  assert.match(classic, /<div class="header[^"]*"><span class="type-icon">/);
+  assert.match(classic, /<div class="hbtns"><button class="key power/);
   assert.doesNotMatch(classic, /class="banner|rc-scene|\.rc-strip/);
   // The mini card has the same banner, its detail button beside power.
   const mini = html(newCard({ entity: "remote.kitchen_roku" }, makeHass(), rc.RemoteMiniCard));

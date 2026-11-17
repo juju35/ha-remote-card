@@ -1957,14 +1957,26 @@ const BANNER_STYLE = `
   .banner.night .type-icon.off .icon { fill: #a3a9b4; }
   .banner .type-icon.warn .icon { fill: var(--warning-color, #ffa600); }
   .banner .type-icon.alert .icon { fill: var(--error-color, #db4437); }
-  .hbtns { position: absolute; top: 6px; right: 6px; display: flex; gap: 6px; }
-  .hbtns .key.power, .hbtns .zoom { width: 32px; height: 32px; color: #2a2722; background: rgba(255,255,255,.6); border-color: rgba(0,0,0,.1); }
-  .night .hbtns .key.power, .night .hbtns .zoom { color: #fff; background: rgba(16,20,32,.45); border-color: rgba(255,255,255,.16); }
-  .hbtns .key.power.on { color: var(--rc-on); border-color: color-mix(in srgb, var(--rc-on) 60%, transparent); }
-  .hbtns .key.power:hover, .hbtns .zoom:hover { background: rgba(255,255,255,.8); }
-  .night .hbtns .key.power:hover, .night .hbtns .zoom:hover { background: rgba(16,20,32,.65); }
+  .banner .hbtns .key.power, .banner .hbtns .zoom { color: #33506b; border: 0; background: rgba(255,255,255,.55);
+                                                     box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .night .hbtns .key.power, .night .hbtns .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .hbtns .key.power.on { color: var(--rc-on); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rc-on) 60%, transparent); }
+  .banner .hbtns .key.power:hover, .banner .hbtns .zoom:hover { background: rgba(255,255,255,.75); }
+  .night .hbtns .key.power:hover, .night .hbtns .zoom:hover { background: rgba(255,255,255,.22); }
+  /* The pill on the wall: frosted glass under the state's colour. */
+  .banner .pill { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }
+  .banner.night .pill { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }
+  .banner .pill.on { --c: var(--rc-on); } .banner .pill.off { --c: #8a8f98; }
+  .htext { container: rc-head / inline-size; }
+  /* Not enough room beside the title: the pill on its own line under the subtitle. */
+  @container rc-head (max-width: 185px) {
+    .htext .titles { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 2px; }
+    .htext .trow { display: contents; } .htext .trow .name { max-width: 100%; }
+    .htext .titles > .sub { justify-self: stretch; }
+    .htext .pill { order: 9; max-width: 100%; }
+  }
   /* Narrow card: no room for the picture beside the text, the bare wall stays. */
-  @container (max-width: 300px) { .rc-scene { display: none; } .htext { right: 44px; } .banner.two .htext { right: 82px; } }
+  @container rc-card (max-width: 300px) { .rc-scene { display: none; } .htext { right: 36px; } .banner.two .htext { right: 64px; } }
   .rc-night, .night .rc-day { display: none; }
   .night .rc-night { display: inline; }
   .rc-pane { fill: #bfe0f7; } .night .rc-pane { fill: #1b2f52; }
@@ -2069,7 +2081,7 @@ const BASE_STYLE = `
   ha-card { --rc-accent-text: var(--rc-fg); --rc-ring: color-mix(in srgb, var(--rc-fg) 75%, transparent); }
   :host { display: block; min-width: 0; --rc-natural-width: 360px; }
   :host::before { content: ""; display: grid; grid-template-columns: minmax(0, var(--rc-natural-width)); height: 0; }
-  ha-card { overflow: hidden; container-type: inline-size; position: relative; }
+  ha-card { overflow: hidden; container: rc-card / inline-size; position: relative; }
   .icon { width: 20px; height: 20px; fill: currentColor; flex: none; }
   [role="button"] { cursor: pointer; }
   [role="button"]:focus-visible, button:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: 2px; }
@@ -2102,6 +2114,23 @@ const BASE_STYLE = `
   .key.power .icon { width: 18px; height: 18px; }
   .key.small .icon { width: 18px; height: 18px; }
   .key:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: 2px; }
+  /* The header's buttons (power, detail): 24 px rounds on one line in the top right corner, the detail button last. */
+  .hbtns { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; gap: 4px; }
+  .hbtns .key.power, .hbtns .zoom { width: 24px; height: 24px; }
+  .hbtns .key.power .icon, .hbtns .zoom .icon { width: 16px; height: 16px; }
+  .header { position: relative; }
+  .header .hbtns { top: 10px; right: 10px; }
+  .header.one { padding-right: 40px; } .header.two { padding-right: 68px; }
+  /* The status pill right after the title (the title ellipsised first), centred on it; its dot alone on a tiny card. */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .trow .name { flex: 0 1 auto; min-width: 0; }
+  .pill { --c: var(--rc-fg); flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
+          line-height: 16px; white-space: nowrap; box-sizing: border-box; max-width: calc(100% - 56px); overflow: hidden;
+          background: color-mix(in srgb, var(--c) 15%, transparent); color: color-mix(in srgb, var(--c) 40%, var(--primary-text-color)); }
+  .pill .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); flex: none; }
+  .pill.off { --c: var(--rc-idle); } .pill.warn { --c: var(--warning-color, #ffa600); } .pill.alert { --c: var(--error-color, #db4437); }
+  @container rc-card (max-width: 200px) { .pill { padding: 4px; } .pill .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
   .zoom { all: unset; box-sizing: border-box; flex: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
           display: grid; place-items: center; color: var(--secondary-text-color); background: transparent; border: 1px solid var(--rc-line);
           transition: background-color .15s ease, color .2s ease, border-color .2s ease; }
@@ -2121,7 +2150,7 @@ const BASE_STYLE = `
   .track > div { height: 100%; border-radius: 2px; background: var(--rc-fg); width: var(--from); }
   .track > div.run { animation: rc-progress var(--left) linear forwards; }
   @keyframes rc-progress { from { width: var(--from); } to { width: 100%; } }
-  @container (max-width: 230px) {
+  @container rc-card (max-width: 230px) {
     .header { gap: 6px; }
   }
 `;
@@ -2189,7 +2218,7 @@ const FULL_STYLE = `
   .source .icon { width: 18px; height: 18px; margin-left: auto; }
   .source span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .source:focus-visible { outline: 2px solid var(--primary-color, var(--rc-accent)); outline-offset: -2px; }
-  @container (max-width: 280px) {
+  @container rc-card (max-width: 280px) {
     .key { width: 44px; height: 44px; }
     .key.small { width: 40px; height: 40px; }
     .controls { gap: 10px; }
@@ -2212,11 +2241,12 @@ const MINI_STYLE = `
   .now .track { margin-top: 3px; }
   .mini-keys { display: flex; gap: 4px; flex: none; margin-left: auto; }
   .mini-keys .narrow-only { display: none; }
-  @container (max-width: 250px) {
+  @container rc-card (max-width: 250px) {
     .mini-keys .wide-only, .header .key.power, .hbtns .key.power { display: none; }
     .mini-keys .narrow-only { display: grid; }
     .art { display: none; }
-    .banner.two .htext { right: 44px; }
+    .banner.two .htext { right: 36px; }
+    .header.two { padding-right: 40px; }
   }
 `;
 
@@ -2567,9 +2597,10 @@ class RemoteCard extends HTMLElement {
   // The full card's subtitle: what is playing (app · title), else the state.
   _subtitle(m, ctx) {
     if (!m.known) return INTEGRATIONS[ctx.integration].name;
-    if (!m.on) return m.state;
+    // The state is in the pill: not repeated here.
+    if (!m.on) return "";
     const app = m.title && m.app === m.title ? "" : m.app;
-    return [app, m.title].filter(Boolean).join(" · ") || m.state;
+    return [app, m.title].filter(Boolean).join(" · ");
   }
 
   // The header: the illustration (the title and the subtitle on its wall, power and the detail button at its top
@@ -2579,14 +2610,18 @@ class RemoteCard extends HTMLElement {
     const more = entity ? ` role="button" tabindex="0" data-action="more_info" data-entity="${esc(entity)}"` : "";
     const power = this._show("show_power") ? this._key(ctx, "power", { cls: "key power", on: m.on, title: m.known ? `${this._t("k_power")} · ${m.state}` : "" }) : "";
     const icon = `<span class="type-icon${m.status ? ` ${m.status}` : ""}">${svgIcon(ICONS.tv)}</span>`;
+    // The status pill right after the title, in the icon's colour.
+    const pill = m.known ? `<span class="pill ${m.status || "on"}" title="${esc(m.state)}"><span class="dot"></span><span class="t">${esc(m.state)}</span></span>` : "";
     const titles = `<div class="titles"${more}>
-          ${this._show("show_title") ? `<div class="name">${esc(this._name(ctx))}</div>` : ""}
+          <div class="trow">${this._show("show_title") ? `<div class="name">${esc(this._name(ctx))}</div>` : ""}${pill}</div>
           ${sub && this._show("show_subtitle") ? `<div class="sub">${sub}</div>` : ""}
         </div>`;
     const zoom = this._zoomButton();
-    if (this._config.illustration === false) return `<div class="header">${icon}${titles}${power}${zoom}</div>`;
+    // Power and the detail button: one line of small rounds in the top right corner, the detail button last.
+    const btns = power || zoom ? `<div class="hbtns">${power}${zoom}</div>` : "";
+    if (this._config.illustration === false) return `<div class="header${power && zoom ? " two" : power || zoom ? " one" : ""}">${icon}${titles}${btns}</div>`;
     const cls = `banner s-${m.scene}${isNight(this._hass, this._config) ? " night" : ""}${power && zoom ? " two" : ""}`;
-    return `<div class="${cls}" data-k="banner"><div class="rc-strip"></div>${this._scene(ctx, m)}<div class="htext">${icon}${titles}</div>${power || zoom ? `<div class="hbtns">${power}${zoom}</div>` : ""}</div>`;
+    return `<div class="${cls}" data-k="banner"><div class="rc-strip"></div>${this._scene(ctx, m)}<div class="htext">${icon}${titles}</div>${btns}</div>`;
   }
 
   // The picture of the banner: what the TV's screen shows, the box and the remote of the integration.
@@ -2812,7 +2847,8 @@ class RemoteMiniCard extends RemoteCard {
       this._show("show_transport") ? this._playPause(ctx, m, "key small") : "",
       this._show("show_volume") ? this._volume(ctx, "key small wide-only") : "",
     ].join("");
-    const sub = !m.known ? INTEGRATIONS[ctx.integration].name : m.on ? m.app || m.state : m.state;
+    // The state is in the pill: the subtitle tells the app only.
+    const sub = !m.known ? INTEGRATIONS[ctx.integration].name : m.on ? m.app : "";
     return `<style>${BASE_STYLE}${MINI_STYLE}${this._bannerStyle()}</style>
       <ha-card${this._hass.themes?.darkMode ? ' class="dark"' : ""}>
         ${this._header(ctx, m, sub ? `<span>${esc(sub)}</span>` : "")}
