@@ -2346,7 +2346,7 @@ class RemoteCard extends HTMLElement {
       ev.preventDefault();
       ev.target.click();
     });
-    this._onUp = () => this._release();
+    this._onUp = (ev) => this._release(ev?.type === "pointercancel");
   }
 
   static getConfigElement() {
@@ -2408,7 +2408,8 @@ class RemoteCard extends HTMLElement {
     this._outside?.off();
     this._resize?.disconnect();
     this._fitWidth = null;
-    this._release();
+    // A key still held is let go without sending anything.
+    this._release(true);
     // Left (another view, a conditional card hidden): the popup closes, sending nothing.
     this._popup = null;
   }
@@ -2551,8 +2552,9 @@ class RemoteCard extends HTMLElement {
     p.y = ev.clientY;
   }
 
-  // End of a press: the repeat stops; a tap on the D-pad with swipe gestures sends its key now.
-  _release() {
+  // End of a press: the repeat stops; a tap on the D-pad with swipe gestures sends its key now, unless the press was
+  // cancelled (pointercancel, or the card left the page).
+  _release(cancel = false) {
     const p = this._press;
     window.removeEventListener?.("pointerup", this._onUp, true);
     window.removeEventListener?.("pointercancel", this._onUp, true);
@@ -2561,7 +2563,7 @@ class RemoteCard extends HTMLElement {
     clearTimeout(p.timer);
     clearInterval(p.timer);
     p.el.classList?.remove("pressed");
-    if (p.swipe && !p.sent && !p.swiped) this._send(p.key);
+    if (p.swipe && !p.sent && !p.swiped && !cancel) this._send(p.key);
     if (this._dirty) this._update();
   }
 
@@ -2971,7 +2973,7 @@ const TOGGLES = [
   ["swipe", false],
 ];
 
-// The illustration's day / night choice; "auto" is night when the sun is down or Home Assistant's theme is dark.
+// The illustration's day / night choice; "auto" follows Home Assistant's theme alone (night with a dark theme).
 const THEMES = ["auto", "day", "night"];
 
 // Keeps the YAML minimal: drops empty values and options left at their default.

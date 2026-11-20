@@ -238,6 +238,32 @@ test("swipe gestures: a swipe sends its direction, a tap the key under the finge
   assert.equal(h.calls.length, 3);
 });
 
+test("swipe gestures: a cancelled press or a card leaving the page sends nothing", () => {
+  const h = makeHass();
+  const card = newCard({ entity: "remote.living_room_apple_tv", swipe: true }, h);
+  press(card, "ok");
+  rc.window.emit("pointercancel", { type: "pointercancel" });
+  assert.equal(h.calls.length, 0, "a pointercancel is no tap");
+  press(card, "left");
+  card.disconnectedCallback();
+  assert.equal(h.calls.length, 0, "leaving the page is no tap");
+  card.connectedCallback();
+  press(card, "left");
+  release();
+  assert.equal(h.calls.at(-1)[2].command, "left");
+});
+
+test("the sibling entity of a device is found from an index built once per registry", () => {
+  const h = makeHass();
+  const r = rc.resolve(h, { entity: "remote.living_room_apple_tv" });
+  assert.ok(r.mp, "the media player of the same device");
+  // Same registry object, other states: same answer.
+  assert.equal(rc.resolve({ ...h, states: { ...h.states } }, { entity: "remote.living_room_apple_tv" }).mp, r.mp);
+  // The player hidden in a new registry: not taken.
+  const ents = { ...h.entities, [r.mp]: { ...h.entities[r.mp], hidden: true } };
+  assert.notEqual(rc.resolve({ ...h, entities: ents }, { entity: "remote.living_room_apple_tv" }).mp, r.mp);
+});
+
 test("sources and apps: a popup at the top of the card; one picked is selected and closes it", () => {
   const h = makeHass();
   const card = newCard({ entity: "media_player.bedroom_tv" }, h);
