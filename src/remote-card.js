@@ -2156,13 +2156,13 @@ const BASE_STYLE = `
   .header { position: relative; }
   .header .hbtns { top: 10px; right: 10px; }
   .header.one { padding-right: 40px; } .header.two { padding-right: 68px; }
-  /* The status pill right after the title, centred on it, while the title stays whole and the pill's whole label fits
-     beside it; otherwise (measured by the card, see _fitPill) the pill on its own line under a one-line subtitle, and
+  /* The status pill at the right of the header, on the title's line, while the title stays whole and the pill's whole
+     label fits beside it; otherwise (measured by the card, see _fitPill) the pill on its own line under a one-line subtitle, and
      if even that would not fit in the header, its dot alone (the label stays in title and aria-label). */
   .titles { display: flex; flex-direction: column; }
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .trow .name { flex: 0 1 auto; min-width: 0; }
-  .trow .pill { flex: none; max-width: none; }
+  .trow .name { flex: 1 1 auto; min-width: 0; }
+  .trow .pill { flex: none; max-width: none; margin-left: auto; }
   .titles.below { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; }
   .titles.below .trow { display: contents; }
   .titles.below .name { max-width: 100%; }
