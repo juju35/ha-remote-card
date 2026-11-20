@@ -1742,8 +1742,10 @@ const byDevice = (ents, dev) => {
 // integration from their platform (the remote's first) unless `integration` is set.
 const resolve = (hass, config) => {
   const ents = hass?.entities || {};
-  let remote = config.entity && domainOf(config.entity) === "remote" ? config.entity : undefined;
-  let mp = config.media_player || (config.entity && domainOf(config.entity) === "media_player" ? config.entity : undefined);
+  // No entity (nor a standalone integration): the first TV remote, as getStubConfig picks.
+  const entity = config.entity || (config.media_player || INTEGRATIONS[config.integration]?.standalone ? undefined : defaultEntity(hass));
+  let remote = entity && domainOf(entity) === "remote" ? entity : undefined;
+  let mp = config.media_player || (entity && domainOf(entity) === "media_player" ? entity : undefined);
   const sibling = (id, domain) => {
     const dev = ents[id]?.device_id;
     if (!dev) return undefined;
@@ -1770,6 +1772,19 @@ const firstEntity = (hass) => {
     ids.find((id) => domainOf(id) === "media_player" && hass.states[id].attributes?.device_class === "tv") ||
     ids.find((id) => domainOf(id) === "remote")
   );
+};
+
+// firstEntity, scanned again only when the entity registry changes (or the entity found is gone).
+const defaultEntities = new WeakMap();
+const defaultEntity = (hass) => {
+  const reg = hass?.entities;
+  if (!reg || !hass.states) return firstEntity(hass);
+  let id = defaultEntities.get(reg);
+  if (id === undefined || (id && !hass.states[id])) {
+    id = firstEntity(hass) || null;
+    defaultEntities.set(reg, id);
+  }
+  return id || undefined;
 };
 
 // One key, as the card sends it: the `commands` override, else the integration's. undefined: not available.

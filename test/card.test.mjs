@@ -59,6 +59,15 @@ test("the remote and the media player are paired through their device, the integ
   const pod = makeHass({}, { devices: { ...devices, dev_atv: { ...devices.dev_atv, model: "HomePod mini" } } });
   assert.equal(rc.firstEntity(pod), "remote.bedroom_tv_remote");
   assert.deepEqual(plain(rc.RemoteCard.getStubConfig(h)), { entity: "remote.living_room_apple_tv" });
+  // No entity: the card takes that first TV remote (and its player), unless a player or a standalone integration is set.
+  const auto = rc.resolve(h, {});
+  assert.equal(auto.remote, "remote.living_room_apple_tv");
+  assert.equal(auto.integration, "apple_tv");
+  assert.equal(rc.resolve(h, { media_player: "media_player.lounge_lg" }).remote, undefined);
+  assert.equal(rc.resolve(h, { integration: "freebox_player" }).standalone, true);
+  assert.equal(rc.resolve(h, { integration: "freebox_player" }).remote, undefined);
+  assert.doesNotMatch(html(newCard({})), /class="warning"/);
+  assert.match(html(newCard({}, makeHass({}, { states: {}, entities: {} }))), /class="warning"/);
 });
 
 test("each integration gets its own commands and services", () => {
