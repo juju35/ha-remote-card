@@ -1980,8 +1980,8 @@ const BANNER_STYLE = `
   .rc-strip { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: #e9e4dc;
               box-shadow: inset 0 2px 0 #fff, inset 0 -2px 0 #cfc7bb; }
   .night .rc-strip { background: #3a3f4c; box-shadow: inset 0 2px 0 #4a5060, inset 0 -2px 0 #30343f; }
-  .rc-scene { position: absolute; right: 0; bottom: 10px; height: 80px; width: min(52cqw, 220px); overflow: hidden; }
-  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(52cqw, 220px) + 4px);
+  .rc-scene { position: absolute; right: 0; bottom: 10px; height: 80px; width: min(44cqw, 220px); overflow: hidden; }
+  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(44cqw, 220px) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
   .htext .titles { flex: 1 1 auto; min-width: 0; gap: 2px; }
   .htext .name { font-size: 16px; font-weight: 600; }
