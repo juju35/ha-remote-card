@@ -2182,7 +2182,7 @@ const BASE_STYLE = `
   .titles.below .trow { display: contents; }
   .titles.below .name { max-width: 100%; }
   .titles.below > .sub { justify-self: stretch; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .titles.below .pill { grid-row: 3; max-width: 100%; }
+  .titles.below .pill { grid-row: 3; max-width: 100%; margin-left: 0; }
   .titles.pill-dot .pill { padding: 4px; }
   .titles.pill-dot .pill .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .pill { --c: var(--rc-fg); flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
