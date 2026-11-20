@@ -1706,6 +1706,23 @@ const svgIcon = (path, cls = "") => `<svg class="icon ${cls}" viewBox="0 0 24 24
 const domainOf = (id) => String(id || "").split(".")[0];
 const supports = (s, bits) => !!s && (Number(s.attributes?.supported_features) & bits) !== 0;
 
+// The entity ids of each device, indexed once per entity registry (Home Assistant hands a new registry object only when
+// it changes): finding the sibling of an entity no longer walks the whole registry on every state change.
+const deviceIndex = new WeakMap();
+const byDevice = (ents, dev) => {
+  let idx = deviceIndex.get(ents);
+  if (!idx) {
+    idx = new Map();
+    for (const [e, entry] of Object.entries(ents)) {
+      if (!entry?.device_id) continue;
+      if (!idx.has(entry.device_id)) idx.set(entry.device_id, []);
+      idx.get(entry.device_id).push(e);
+    }
+    deviceIndex.set(ents, idx);
+  }
+  return idx.get(dev) || [];
+};
+
 // The remote and the media player of the card: the ones configured, the other one found on the same device, the
 // integration from their platform (the remote's first) unless `integration` is set.
 const resolve = (hass, config) => {
@@ -1715,7 +1732,7 @@ const resolve = (hass, config) => {
   const sibling = (id, domain) => {
     const dev = ents[id]?.device_id;
     if (!dev) return undefined;
-    return Object.keys(ents).find((e) => domainOf(e) === domain && ents[e].device_id === dev && !ents[e].hidden && hass.states[e]);
+    return byDevice(ents, dev).find((e) => domainOf(e) === domain && !ents[e].hidden && hass.states[e]);
   };
   if (remote && !mp) mp = sibling(remote, "media_player");
   if (mp && !remote) remote = sibling(mp, "remote");
