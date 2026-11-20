@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.2 - 2026-11-20
+
+### Fixes
+- With swipe gestures, a press on the D-pad cancelled by the browser (`pointercancel`) or still held when the card leaves the page no longer sends the key under the finger.
+
+### Performance
+- The media player (or remote) of the same device is found from an index of the entity registry built once per registry change, instead of walking the whole registry on every state change of the instance.
+
+### Maintenance
+- The commitlint config is an ES module (the package is `"type": "module"`): the local `commit-msg` hook no longer crashes.
+
 ## 1.1.1 - 2026-11-18
 
 ### Fixes
