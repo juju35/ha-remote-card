@@ -443,6 +443,28 @@ test("names are escaped", () => {
   assert.match(out, /&lt;b&gt;TV&lt;\/b&gt;/);
 });
 
+test("the brand logo is a badge on the header pastille, full and mini, illustrated or classic", async () => {
+  const { existsSync } = await import("node:fs");
+  // Every integration but generic has a logo, inlined by the build from images/badges/.
+  for (const [name, i] of Object.entries(rc.INTEGRATIONS)) {
+    if (name === "generic") assert.equal(i.logo, undefined);
+    else assert.ok(existsSync(new URL(`../images/badges/${i.logo.match(/^__IMG_FILE:(.+)__$/)[1]}`, import.meta.url)), name);
+  }
+  // Unbuilt, no badge (no broken image).
+  assert.doesNotMatch(html(newCard({ entity: "remote.living_room_apple_tv" })), /class="brand-badge"/);
+  const saved = rc.INTEGRATIONS.apple_tv.logo;
+  rc.INTEGRATIONS.apple_tv.logo = "data:image/png;base64,AAAA";
+  try {
+    const badge = /<span class="type-icon"><svg[^>]*><path[^>]*\/><\/svg><span class="brand-badge" title="Apple TV"><img src="data:image\/png;base64,AAAA" alt=""><\/span><\/span>/;
+    assert.match(html(newCard({ entity: "remote.living_room_apple_tv" })), badge);
+    assert.match(html(newCard({ entity: "remote.living_room_apple_tv" }, makeHass(), rc.RemoteMiniCard)), badge);
+    assert.match(html(newCard({ entity: "remote.living_room_apple_tv", illustration: false })), badge);
+    assert.doesNotMatch(html(newCard({ entity: "remote.living_room_apple_tv", integration: "generic" })), /class="brand-badge"/);
+  } finally {
+    rc.INTEGRATIONS.apple_tv.logo = saved;
+  }
+});
+
 test("illustrated header: the screen and the icon follow the state, the box follows the integration, day or night", () => {
   const atv = html(newCard({ entity: "remote.living_room_apple_tv" }));
   assert.match(atv, /class="banner s-play"/);

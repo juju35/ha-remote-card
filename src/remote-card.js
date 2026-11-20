@@ -1566,6 +1566,7 @@ const serviceKeys = (service, field, values, extra) => ({
 const INTEGRATIONS = {
   apple_tv: {
     name: "Apple TV",
+    logo: "__IMG_FILE:apple_tv.png__",
     keys: remoteKeys([
       ...["up", "down", "left", "right", "select", "menu", "home", "top_menu"],
       // No mute command on the Siri Remote: through the media player, when it supports it.
@@ -1577,6 +1578,7 @@ const INTEGRATIONS = {
   },
   androidtv_remote: {
     name: "Android TV",
+    logo: "__IMG_FILE:androidtv.png__",
     keys: remoteKeys([
       ...["DPAD_UP", "DPAD_DOWN", "DPAD_LEFT", "DPAD_RIGHT", "DPAD_CENTER", "BACK", "HOME", "MENU"],
       ...["VOLUME_UP", "VOLUME_DOWN", "VOLUME_MUTE"],
@@ -1586,6 +1588,7 @@ const INTEGRATIONS = {
   },
   philips_js: {
     name: "Philips TV",
+    logo: "__IMG_FILE:philips.png__",
     keys: remoteKeys([
       ...["CursorUp", "CursorDown", "CursorLeft", "CursorRight", "Confirm", "Back", "Home", "Options"],
       ...["VolumeUp", "VolumeDown", "Mute"],
@@ -1595,6 +1598,7 @@ const INTEGRATIONS = {
   },
   samsungtv: {
     name: "Samsung TV",
+    logo: "__IMG_FILE:samsung.png__",
     keys: remoteKeys([
       ...["KEY_UP", "KEY_DOWN", "KEY_LEFT", "KEY_RIGHT", "KEY_ENTER", "KEY_RETURN", "KEY_HOME", "KEY_MENU"],
       ...["KEY_VOLUP", "KEY_VOLDOWN", "KEY_MUTE"],
@@ -1604,6 +1608,7 @@ const INTEGRATIONS = {
   },
   webostv: {
     name: "LG webOS TV",
+    logo: "__IMG_FILE:webostv.png__",
     keys: serviceKeys("webostv.button", "button", [
       ...["UP", "DOWN", "LEFT", "RIGHT", "ENTER", "BACK", "HOME", "MENU"],
       ...["VOLUMEUP", "VOLUMEDOWN", "MUTE"],
@@ -1613,6 +1618,7 @@ const INTEGRATIONS = {
   },
   roku: {
     name: "Roku",
+    logo: "__IMG_FILE:roku.png__",
     keys: remoteKeys([
       ...["up", "down", "left", "right", "select", "back", "home", "info"],
       ...["volume_up", "volume_down", "volume_mute"],
@@ -1622,6 +1628,7 @@ const INTEGRATIONS = {
   },
   androidtv: {
     name: "Fire TV / Android (ADB)",
+    logo: "__IMG_FILE:amazon.png__",
     keys: serviceKeys("androidtv.adb_command", "command", [
       ...["UP", "DOWN", "LEFT", "RIGHT", "CENTER", "BACK", "HOME", "MENU"],
       ...["VOLUME_UP", "VOLUME_DOWN", "MUTE"],
@@ -1633,6 +1640,7 @@ const INTEGRATIONS = {
   // its service freebox_player.remote sends the network remote's codes. The Pop is an Android TV (androidtv_remote).
   freebox_player: {
     name: "Freebox Player",
+    logo: "__IMG_FILE:freebox.png__",
     standalone: true,
     keys: {
       ...serviceKeys(
@@ -1651,6 +1659,7 @@ const INTEGRATIONS = {
   },
   kodi: {
     name: "Kodi",
+    logo: "__IMG_FILE:kodi.png__",
     keys: serviceKeys("kodi.call_method", "method", [
       ...["Input.Up", "Input.Down", "Input.Left", "Input.Right", "Input.Select", "Input.Back", "Input.Home", "Input.ContextMenu"],
       ...[MP("volume_up"), MP("volume_down"), MUTE],
@@ -1662,6 +1671,12 @@ const INTEGRATIONS = {
     name: "",
     keys: { ...fromList(KEYS, []), ...MEDIA },
   },
+};
+
+// The integration's brand logo, inlined by scripts/build.mjs (a 36 px PNG from images/badges/); none when unbuilt.
+const logoOf = (integration) => {
+  const logo = INTEGRATIONS[integration]?.logo || "";
+  return logo.startsWith("data:image/") ? logo : "";
 };
 
 // media_player supported_features bits.
@@ -2109,6 +2124,11 @@ const BASE_STYLE = `
   .type-icon { display: flex; flex: none; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center;
                background: color-mix(in srgb, var(--rc-fg) 18%, transparent); transition: background-color .2s ease; }
   .type-icon .icon { width: 24px; height: 24px; fill: var(--rc-fg); transition: fill .2s ease; }
+  /* The brand logo: an 18 px white badge at the bottom right of the pastille, ringed with the card's background. */
+  .type-icon { position: relative; }
+  .brand-badge { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; overflow: hidden;
+                 box-shadow: 0 0 0 1.5px var(--card-background-color, #fff), 0 1px 2px rgba(0,0,0,.25); display: grid; place-items: center; }
+  .brand-badge img { width: 12px; height: 12px; object-fit: contain; display: block; }
   .type-icon.off { background: color-mix(in srgb, var(--rc-idle) 14%, transparent); }
   .type-icon.off .icon { fill: var(--secondary-text-color); }
   .type-icon.warn { background: color-mix(in srgb, var(--warning-color, #ffa600) 16%, transparent); }
@@ -2677,7 +2697,10 @@ class RemoteCard extends HTMLElement {
     const entity = ctx.mp || ctx.remote;
     const more = entity ? ` role="button" tabindex="0" data-action="more_info" data-entity="${esc(entity)}"` : "";
     const power = this._show("show_power") ? this._key(ctx, "power", { cls: "key power", on: m.on, title: m.known ? `${this._t("k_power")} · ${m.state}` : "" }) : "";
-    const icon = `<span class="type-icon${m.status ? ` ${m.status}` : ""}">${svgIcon(ICONS.tv)}</span>`;
+    // The brand logo of the integration as a white badge at the bottom right of the pastille.
+    const logo = logoOf(ctx.integration);
+    const badge = logo ? `<span class="brand-badge" title="${esc(INTEGRATIONS[ctx.integration].name)}"><img src="${logo}" alt=""></span>` : "";
+    const icon = `<span class="type-icon${m.status ? ` ${m.status}` : ""}">${svgIcon(ICONS.tv)}${badge}</span>`;
     // The status pill right after the title, in the icon's colour.
     const pill = m.known ? `<span class="pill ${m.status || "on"}" title="${esc(m.state)}"><span class="dot"></span><span class="t">${esc(m.state)}</span></span>` : "";
     const titles = `<div class="titles"${more}>
