@@ -1566,6 +1566,7 @@ const serviceKeys = (service, field, values, extra) => ({
 const INTEGRATIONS = {
   apple_tv: {
     name: "Apple TV",
+    logo: "__IMG_FILE:apple_tv.png__",
     keys: remoteKeys([
       ...["up", "down", "left", "right", "select", "menu", "home", "top_menu"],
       // No mute command on the Siri Remote: through the media player, when it supports it.
@@ -1577,6 +1578,7 @@ const INTEGRATIONS = {
   },
   androidtv_remote: {
     name: "Android TV",
+    logo: "__IMG_FILE:androidtv.png__",
     keys: remoteKeys([
       ...["DPAD_UP", "DPAD_DOWN", "DPAD_LEFT", "DPAD_RIGHT", "DPAD_CENTER", "BACK", "HOME", "MENU"],
       ...["VOLUME_UP", "VOLUME_DOWN", "VOLUME_MUTE"],
@@ -1586,6 +1588,7 @@ const INTEGRATIONS = {
   },
   philips_js: {
     name: "Philips TV",
+    logo: "__IMG_FILE:philips.png__",
     keys: remoteKeys([
       ...["CursorUp", "CursorDown", "CursorLeft", "CursorRight", "Confirm", "Back", "Home", "Options"],
       ...["VolumeUp", "VolumeDown", "Mute"],
@@ -1595,6 +1598,7 @@ const INTEGRATIONS = {
   },
   samsungtv: {
     name: "Samsung TV",
+    logo: "__IMG_FILE:samsung.png__",
     keys: remoteKeys([
       ...["KEY_UP", "KEY_DOWN", "KEY_LEFT", "KEY_RIGHT", "KEY_ENTER", "KEY_RETURN", "KEY_HOME", "KEY_MENU"],
       ...["KEY_VOLUP", "KEY_VOLDOWN", "KEY_MUTE"],
@@ -1604,6 +1608,7 @@ const INTEGRATIONS = {
   },
   webostv: {
     name: "LG webOS TV",
+    logo: "__IMG_FILE:webostv.png__",
     keys: serviceKeys("webostv.button", "button", [
       ...["UP", "DOWN", "LEFT", "RIGHT", "ENTER", "BACK", "HOME", "MENU"],
       ...["VOLUMEUP", "VOLUMEDOWN", "MUTE"],
@@ -1613,6 +1618,7 @@ const INTEGRATIONS = {
   },
   roku: {
     name: "Roku",
+    logo: "__IMG_FILE:roku.png__",
     keys: remoteKeys([
       ...["up", "down", "left", "right", "select", "back", "home", "info"],
       ...["volume_up", "volume_down", "volume_mute"],
@@ -1622,6 +1628,7 @@ const INTEGRATIONS = {
   },
   androidtv: {
     name: "Fire TV / Android (ADB)",
+    logo: "__IMG_FILE:amazon.png__",
     keys: serviceKeys("androidtv.adb_command", "command", [
       ...["UP", "DOWN", "LEFT", "RIGHT", "CENTER", "BACK", "HOME", "MENU"],
       ...["VOLUME_UP", "VOLUME_DOWN", "MUTE"],
@@ -1633,6 +1640,7 @@ const INTEGRATIONS = {
   // its service freebox_player.remote sends the network remote's codes. The Pop is an Android TV (androidtv_remote).
   freebox_player: {
     name: "Freebox Player",
+    logo: "__IMG_FILE:freebox.png__",
     standalone: true,
     keys: {
       ...serviceKeys(
@@ -1651,6 +1659,7 @@ const INTEGRATIONS = {
   },
   kodi: {
     name: "Kodi",
+    logo: "__IMG_FILE:kodi.png__",
     keys: serviceKeys("kodi.call_method", "method", [
       ...["Input.Up", "Input.Down", "Input.Left", "Input.Right", "Input.Select", "Input.Back", "Input.Home", "Input.ContextMenu"],
       ...[MP("volume_up"), MP("volume_down"), MUTE],
@@ -1662,6 +1671,12 @@ const INTEGRATIONS = {
     name: "",
     keys: { ...fromList(KEYS, []), ...MEDIA },
   },
+};
+
+// The integration's brand logo, inlined by scripts/build.mjs (a 36 px PNG from images/badges/); none when unbuilt.
+const logoOf = (integration) => {
+  const logo = INTEGRATIONS[integration]?.logo || "";
+  return logo.startsWith("data:image/") ? logo : "";
 };
 
 // media_player supported_features bits.
@@ -1706,16 +1721,35 @@ const svgIcon = (path, cls = "") => `<svg class="icon ${cls}" viewBox="0 0 24 24
 const domainOf = (id) => String(id || "").split(".")[0];
 const supports = (s, bits) => !!s && (Number(s.attributes?.supported_features) & bits) !== 0;
 
+// The entity ids of each device, indexed once per entity registry (Home Assistant hands a new registry object only when
+// it changes): finding the sibling of an entity no longer walks the whole registry on every state change.
+const deviceIndex = new WeakMap();
+const byDevice = (ents, dev) => {
+  let idx = deviceIndex.get(ents);
+  if (!idx) {
+    idx = new Map();
+    for (const [e, entry] of Object.entries(ents)) {
+      if (!entry?.device_id) continue;
+      if (!idx.has(entry.device_id)) idx.set(entry.device_id, []);
+      idx.get(entry.device_id).push(e);
+    }
+    deviceIndex.set(ents, idx);
+  }
+  return idx.get(dev) || [];
+};
+
 // The remote and the media player of the card: the ones configured, the other one found on the same device, the
 // integration from their platform (the remote's first) unless `integration` is set.
 const resolve = (hass, config) => {
   const ents = hass?.entities || {};
-  let remote = config.entity && domainOf(config.entity) === "remote" ? config.entity : undefined;
-  let mp = config.media_player || (config.entity && domainOf(config.entity) === "media_player" ? config.entity : undefined);
+  // No entity (nor a standalone integration): the first TV remote, as getStubConfig picks.
+  const entity = config.entity || (config.media_player || INTEGRATIONS[config.integration]?.standalone ? undefined : defaultEntity(hass));
+  let remote = entity && domainOf(entity) === "remote" ? entity : undefined;
+  let mp = config.media_player || (entity && domainOf(entity) === "media_player" ? entity : undefined);
   const sibling = (id, domain) => {
     const dev = ents[id]?.device_id;
     if (!dev) return undefined;
-    return Object.keys(ents).find((e) => domainOf(e) === domain && ents[e].device_id === dev && !ents[e].hidden && hass.states[e]);
+    return byDevice(ents, dev).find((e) => domainOf(e) === domain && !ents[e].hidden && hass.states[e]);
   };
   if (remote && !mp) mp = sibling(remote, "media_player");
   if (mp && !remote) remote = sibling(mp, "remote");
@@ -1738,6 +1772,19 @@ const firstEntity = (hass) => {
     ids.find((id) => domainOf(id) === "media_player" && hass.states[id].attributes?.device_class === "tv") ||
     ids.find((id) => domainOf(id) === "remote")
   );
+};
+
+// firstEntity, scanned again only when the entity registry changes (or the entity found is gone).
+const defaultEntities = new WeakMap();
+const defaultEntity = (hass) => {
+  const reg = hass?.entities;
+  if (!reg || !hass.states) return firstEntity(hass);
+  let id = defaultEntities.get(reg);
+  if (id === undefined || (id && !hass.states[id])) {
+    id = firstEntity(hass) || null;
+    defaultEntities.set(reg, id);
+  }
+  return id || undefined;
 };
 
 // One key, as the card sends it: the `commands` override, else the integration's. undefined: not available.
@@ -1948,8 +1995,8 @@ const BANNER_STYLE = `
   .rc-strip { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: #e9e4dc;
               box-shadow: inset 0 2px 0 #fff, inset 0 -2px 0 #cfc7bb; }
   .night .rc-strip { background: #3a3f4c; box-shadow: inset 0 2px 0 #4a5060, inset 0 -2px 0 #30343f; }
-  .rc-scene { position: absolute; right: 0; bottom: 10px; height: 80px; width: min(52cqw, 220px); overflow: hidden; }
-  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(52cqw, 220px) + 4px);
+  .rc-scene { position: absolute; right: 0; bottom: 10px; height: 80px; width: min(44cqw, 220px); overflow: hidden; }
+  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(min(44cqw, 220px) + 4px);
            display: flex; align-items: center; gap: 10px; min-width: 0; }
   .htext .titles { flex: 1 1 auto; min-width: 0; gap: 2px; }
   .htext .name { font-size: 16px; font-weight: 600; }
@@ -2092,6 +2139,11 @@ const BASE_STYLE = `
   .type-icon { display: flex; flex: none; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center;
                background: color-mix(in srgb, var(--rc-fg) 18%, transparent); transition: background-color .2s ease; }
   .type-icon .icon { width: 24px; height: 24px; fill: var(--rc-fg); transition: fill .2s ease; }
+  /* The brand logo: an 18 px white badge at the bottom right of the pastille, ringed with the card's background. */
+  .type-icon { position: relative; }
+  .brand-badge { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; overflow: hidden;
+                 box-shadow: 0 0 0 1.5px var(--card-background-color, #fff), 0 1px 2px rgba(0,0,0,.25); display: grid; place-items: center; }
+  .brand-badge img { width: 12px; height: 12px; object-fit: contain; display: block; }
   .type-icon.off { background: color-mix(in srgb, var(--rc-idle) 14%, transparent); }
   .type-icon.off .icon { fill: var(--secondary-text-color); }
   .type-icon.warn { background: color-mix(in srgb, var(--warning-color, #ffa600) 16%, transparent); }
@@ -2119,18 +2171,18 @@ const BASE_STYLE = `
   .header { position: relative; }
   .header .hbtns { top: 10px; right: 10px; }
   .header.one { padding-right: 40px; } .header.two { padding-right: 68px; }
-  /* The status pill right after the title, centred on it, while the title stays whole and the pill's whole label fits
-     beside it; otherwise (measured by the card, see _fitPill) the pill on its own line under a one-line subtitle, and
+  /* The status pill at the right of the header, on the title's line, while the title stays whole and the pill's whole
+     label fits beside it; otherwise (measured by the card, see _fitPill) the pill on its own line under a one-line subtitle, and
      if even that would not fit in the header, its dot alone (the label stays in title and aria-label). */
   .titles { display: flex; flex-direction: column; }
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .trow .name { flex: 0 1 auto; min-width: 0; }
-  .trow .pill { flex: none; max-width: none; }
+  .trow .name { flex: 1 1 auto; min-width: 0; }
+  .trow .pill { flex: none; max-width: none; margin-left: auto; }
   .titles.below { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; }
   .titles.below .trow { display: contents; }
   .titles.below .name { max-width: 100%; }
   .titles.below > .sub { justify-self: stretch; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .titles.below .pill { grid-row: 3; max-width: 100%; }
+  .titles.below .pill { grid-row: 3; max-width: 100%; margin-left: 0; }
   .titles.pill-dot .pill { padding: 4px; }
   .titles.pill-dot .pill .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .pill { --c: var(--rc-fg); flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;
@@ -2329,7 +2381,7 @@ class RemoteCard extends HTMLElement {
       ev.preventDefault();
       ev.target.click();
     });
-    this._onUp = () => this._release();
+    this._onUp = (ev) => this._release(ev?.type === "pointercancel");
   }
 
   static getConfigElement() {
@@ -2391,7 +2443,8 @@ class RemoteCard extends HTMLElement {
     this._outside?.off();
     this._resize?.disconnect();
     this._fitWidth = null;
-    this._release();
+    // A key still held is let go without sending anything.
+    this._release(true);
     // Left (another view, a conditional card hidden): the popup closes, sending nothing.
     this._popup = null;
   }
@@ -2534,8 +2587,9 @@ class RemoteCard extends HTMLElement {
     p.y = ev.clientY;
   }
 
-  // End of a press: the repeat stops; a tap on the D-pad with swipe gestures sends its key now.
-  _release() {
+  // End of a press: the repeat stops; a tap on the D-pad with swipe gestures sends its key now, unless the press was
+  // cancelled (pointercancel, or the card left the page).
+  _release(cancel = false) {
     const p = this._press;
     window.removeEventListener?.("pointerup", this._onUp, true);
     window.removeEventListener?.("pointercancel", this._onUp, true);
@@ -2544,7 +2598,7 @@ class RemoteCard extends HTMLElement {
     clearTimeout(p.timer);
     clearInterval(p.timer);
     p.el.classList?.remove("pressed");
-    if (p.swipe && !p.sent && !p.swiped) this._send(p.key);
+    if (p.swipe && !p.sent && !p.swiped && !cancel) this._send(p.key);
     if (this._dirty) this._update();
   }
 
@@ -2658,7 +2712,10 @@ class RemoteCard extends HTMLElement {
     const entity = ctx.mp || ctx.remote;
     const more = entity ? ` role="button" tabindex="0" data-action="more_info" data-entity="${esc(entity)}"` : "";
     const power = this._show("show_power") ? this._key(ctx, "power", { cls: "key power", on: m.on, title: m.known ? `${this._t("k_power")} · ${m.state}` : "" }) : "";
-    const icon = `<span class="type-icon${m.status ? ` ${m.status}` : ""}">${svgIcon(ICONS.tv)}</span>`;
+    // The brand logo of the integration as a white badge at the bottom right of the pastille.
+    const logo = logoOf(ctx.integration);
+    const badge = logo ? `<span class="brand-badge" title="${esc(INTEGRATIONS[ctx.integration].name)}"><img src="${logo}" alt=""></span>` : "";
+    const icon = `<span class="type-icon${m.status ? ` ${m.status}` : ""}">${svgIcon(ICONS.tv)}${badge}</span>`;
     // The status pill right after the title, in the icon's colour.
     const pill = m.known ? `<span class="pill ${m.status || "on"}" title="${esc(m.state)}"><span class="dot"></span><span class="t">${esc(m.state)}</span></span>` : "";
     const titles = `<div class="titles"${more}>
@@ -2954,7 +3011,7 @@ const TOGGLES = [
   ["swipe", false],
 ];
 
-// The illustration's day / night choice; "auto" is night when the sun is down or Home Assistant's theme is dark.
+// The illustration's day / night choice; "auto" follows Home Assistant's theme alone (night with a dark theme).
 const THEMES = ["auto", "day", "night"];
 
 // Keeps the YAML minimal: drops empty values and options left at their default.

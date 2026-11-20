@@ -1,13 +1,17 @@
-// Bundles src/remote-card.js into the single file dist/remote-card.js.
+// Bundles src/remote-card.js into the single file dist/remote-card.js, inlining the brand logos of the header badge
+// ("__IMG_FILE:<file>__") from images/badges/<file> (36 px PNGs, left out when the file is not there).
 // Usage: node scripts/build.mjs  (dist/ is not committed: CI and the release workflow build it)
-import { mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { splitDist } from "./i18n-split.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const pkg = JSON.parse(readFileSync(`${root}package.json`, "utf8"));
 
-const out = readFileSync(`${root}src/remote-card.js`, "utf8").replace("__VERSION__", pkg.version);
+const badge = (file) => `${root}images/badges/${file}`;
+const out = readFileSync(`${root}src/remote-card.js`, "utf8")
+  .replace("__VERSION__", pkg.version)
+  .replace(/__IMG_FILE:([\w.-]+\.png)__/g, (_, file) => (existsSync(badge(file)) ? `data:image/png;base64,${readFileSync(badge(file)).toString("base64")}` : ""));
 
 mkdirSync(`${root}dist`, { recursive: true });
 writeFileSync(`${root}dist/remote-card.js`, out);

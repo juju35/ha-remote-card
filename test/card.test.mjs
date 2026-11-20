@@ -59,6 +59,15 @@ test("the remote and the media player are paired through their device, the integ
   const pod = makeHass({}, { devices: { ...devices, dev_atv: { ...devices.dev_atv, model: "HomePod mini" } } });
   assert.equal(rc.firstEntity(pod), "remote.bedroom_tv_remote");
   assert.deepEqual(plain(rc.RemoteCard.getStubConfig(h)), { entity: "remote.living_room_apple_tv" });
+  // No entity: the card takes that first TV remote (and its player), unless a player or a standalone integration is set.
+  const auto = rc.resolve(h, {});
+  assert.equal(auto.remote, "remote.living_room_apple_tv");
+  assert.equal(auto.integration, "apple_tv");
+  assert.equal(rc.resolve(h, { media_player: "media_player.lounge_lg" }).remote, undefined);
+  assert.equal(rc.resolve(h, { integration: "freebox_player" }).standalone, true);
+  assert.equal(rc.resolve(h, { integration: "freebox_player" }).remote, undefined);
+  assert.doesNotMatch(html(newCard({})), /class="warning"/);
+  assert.match(html(newCard({}, makeHass({}, { states: {}, entities: {} }))), /class="warning"/);
 });
 
 test("each integration gets its own commands and services", () => {
@@ -238,6 +247,32 @@ test("swipe gestures: a swipe sends its direction, a tap the key under the finge
   assert.equal(h.calls.length, 3);
 });
 
+test("swipe gestures: a cancelled press or a card leaving the page sends nothing", () => {
+  const h = makeHass();
+  const card = newCard({ entity: "remote.living_room_apple_tv", swipe: true }, h);
+  press(card, "ok");
+  rc.window.emit("pointercancel", { type: "pointercancel" });
+  assert.equal(h.calls.length, 0, "a pointercancel is no tap");
+  press(card, "left");
+  card.disconnectedCallback();
+  assert.equal(h.calls.length, 0, "leaving the page is no tap");
+  card.connectedCallback();
+  press(card, "left");
+  release();
+  assert.equal(h.calls.at(-1)[2].command, "left");
+});
+
+test("the sibling entity of a device is found from an index built once per registry", () => {
+  const h = makeHass();
+  const r = rc.resolve(h, { entity: "remote.living_room_apple_tv" });
+  assert.ok(r.mp, "the media player of the same device");
+  // Same registry object, other states: same answer.
+  assert.equal(rc.resolve({ ...h, states: { ...h.states } }, { entity: "remote.living_room_apple_tv" }).mp, r.mp);
+  // The player hidden in a new registry: not taken.
+  const ents = { ...h.entities, [r.mp]: { ...h.entities[r.mp], hidden: true } };
+  assert.notEqual(rc.resolve({ ...h, entities: ents }, { entity: "remote.living_room_apple_tv" }).mp, r.mp);
+});
+
 test("sources and apps: a popup at the top of the card; one picked is selected and closes it", () => {
   const h = makeHass();
   const card = newCard({ entity: "media_player.bedroom_tv" }, h);
@@ -415,6 +450,28 @@ test("names are escaped", () => {
   assert.equal(rc.esc(`<a href="x">'&`), "&lt;a href=&quot;x&quot;&gt;&#39;&amp;");
   const out = html(newCard({ entity: "remote.living_room_apple_tv", title: "<b>TV</b>" }));
   assert.match(out, /&lt;b&gt;TV&lt;\/b&gt;/);
+});
+
+test("the brand logo is a badge on the header pastille, full and mini, illustrated or classic", async () => {
+  const { existsSync } = await import("node:fs");
+  // Every integration but generic has a logo, inlined by the build from images/badges/.
+  for (const [name, i] of Object.entries(rc.INTEGRATIONS)) {
+    if (name === "generic") assert.equal(i.logo, undefined);
+    else assert.ok(existsSync(new URL(`../images/badges/${i.logo.match(/^__IMG_FILE:(.+)__$/)[1]}`, import.meta.url)), name);
+  }
+  // Unbuilt, no badge (no broken image).
+  assert.doesNotMatch(html(newCard({ entity: "remote.living_room_apple_tv" })), /class="brand-badge"/);
+  const saved = rc.INTEGRATIONS.apple_tv.logo;
+  rc.INTEGRATIONS.apple_tv.logo = "data:image/png;base64,AAAA";
+  try {
+    const badge = /<span class="type-icon"><svg[^>]*><path[^>]*\/><\/svg><span class="brand-badge" title="Apple TV"><img src="data:image\/png;base64,AAAA" alt=""><\/span><\/span>/;
+    assert.match(html(newCard({ entity: "remote.living_room_apple_tv" })), badge);
+    assert.match(html(newCard({ entity: "remote.living_room_apple_tv" }, makeHass(), rc.RemoteMiniCard)), badge);
+    assert.match(html(newCard({ entity: "remote.living_room_apple_tv", illustration: false })), badge);
+    assert.doesNotMatch(html(newCard({ entity: "remote.living_room_apple_tv", integration: "generic" })), /class="brand-badge"/);
+  } finally {
+    rc.INTEGRATIONS.apple_tv.logo = saved;
+  }
 });
 
 test("illustrated header: the screen and the icon follow the state, the box follows the integration, day or night", () => {

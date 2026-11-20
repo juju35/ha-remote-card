@@ -35,7 +35,7 @@ The card finds the TV's `remote` and `media_player` entities on the same device 
 ## Features
 
 - Two cards: a full **Remote Card** (`custom:remote-card`) and a compact **Remote Mini Card** (`custom:remote-mini-card`)
-- Header: the TV's name, **what is playing** (app · title, with dancing bars while it plays) and a progress bar, the **power** key on the right, outlined in the accent color while the TV is on
+- Header: a round icon in the state's color with the **brand logo** of the integration as a small badge (Apple TV, Android TV, Philips, Samsung, LG, Roku, Fire TV, Freebox, Kodi), the TV's name with the **status pill** at the right of its line, **what is playing** (app · title, with dancing bars while it plays) and a progress bar, the **power** key on the right, outlined in the accent color while the TV is on
 - Large round **D-pad**: up, down, left, right and OK; optional **swipe gestures** (swipe to move, tap to press)
 - Back, home and menu keys on the same row as the **volume** rocker (− | mute | +, the mute key in the accent color while muted) when the card is wide enough, a **channel** rocker when the TV has channels, play / pause, previous and next
 - Outlined keys, never filled: the accent color rings the key pressed or active
@@ -255,7 +255,7 @@ While the TV plays, three bars dance next to what is playing and the progress ba
 
 ## How it works
 
-The card reads the Home Assistant entity and device registries: the `remote` and the `media_player` of the same device are paired (give either one), and the integration is the platform of the remote, else of the player. Unless `integration` is set, a player of an integration the card does not know gets the media player keys only.
+The card reads the Home Assistant entity and device registries: the `remote` and the `media_player` of the same device are paired (give either one), and the integration is the platform of the remote, else of the player. Without `entity` (nor `media_player`), the card takes the first remote of a supported integration (a HomePod left out), else the first TV. Unless `integration` is set, a player of an integration the card does not know gets the media player keys only.
 
 A key is pressed on the pointer press, not at the release, so the remote feels immediate; the direction, volume and channel keys are sent again every 180 ms after a 450 ms hold while `repeat` is on. With `swipe`, a press on the D-pad waits: moving the finger by 28 px sends the direction (again for each further 28 px), a tap sends the key under it, a hold repeats it. The card is not redrawn while a key is held, so the key keeps its pressed look, and updates are patched into the page in place so that the animations do not restart.
 

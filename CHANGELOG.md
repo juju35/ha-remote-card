@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.2.0 - 2026-11-20
+
+### Features
+- The header's round icon carries the brand logo of the integration (Apple TV, Android TV, Philips, Samsung, LG webOS, Roku, Fire TV, Freebox, Kodi) as an 18 px white badge at its bottom right, in the full and the mini card.
+- The status pill sits at the right of the header, on the title's line (under the subtitle when the title would be cut, as before).
+- Without `entity`, the card takes the first TV remote (as the visual editor proposes) instead of showing an error.
+
+### Fixes
+- Illustrated header: the picture takes less of the width (44 % of the card, at most 220 px), so the title is less often cut at around 400 px.
+- With swipe gestures, a press on the D-pad cancelled by the browser (`pointercancel`) or still held when the card leaves the page no longer sends the key under the finger.
+
+### Performance
+- The media player (or remote) of the same device is found from an index of the entity registry built once per registry change, instead of walking the whole registry on every state change of the instance.
+
+### Maintenance
+- The commitlint config is an ES module (the package is `"type": "module"`): the local `commit-msg` hook no longer crashes.
+
 ## 1.1.1 - 2026-11-18
 
 ### Fixes
