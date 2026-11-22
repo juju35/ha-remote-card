@@ -1,6 +1,6 @@
 {
   "name": "ha-remote-card",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Lovelace remote control card for Home Assistant: D-pad, volume, channels, transport, sources and apps for Apple TV, Android TV, Philips, Samsung, LG webOS, Roku, Fire TV, Freebox Player and Kodi.",
   "private": true,
   "type": "module",
