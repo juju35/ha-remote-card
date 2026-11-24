@@ -1,10 +1,9 @@
-// Evaluates src/remote-card.js (a classic script, bundled as is by scripts/build.mjs) in a sandbox with minimal DOM
+// Evaluates the bundled card source (test/source.mjs) (a classic script, bundled as is by scripts/build.mjs) in a sandbox with minimal DOM
 // stand-ins and returns the names the tests need. No dependency, no browser: the cards fall back to innerHTML when
 // there is no <template> to patch from.
-import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import { source } from "./source.mjs";
 
-const source = readFileSync(new URL("../src/remote-card.js", import.meta.url), "utf8");
 
 // Event target stand-in: every listener of every type, fired by hand with emit(type, ev).
 const target = (obj = {}) =>
