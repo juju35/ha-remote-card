@@ -5,7 +5,7 @@
 export const BASE_STYLE = `
   /* Accent blue-grey; its lighter tint carries icons, text, rings and bars on a dark theme. */
   :host { --rc-accent: #546e7a; --rc-accent-light: #90a4ae; --rc-fg: var(--rc-accent);
-          --rc-idle: var(--disabled-text-color, #9e9e9e);
+          --rc-idle: var(--secondary-text-color, #9e9e9e);
           --rc-glass: color-mix(in srgb, var(--primary-text-color) 3%, transparent);
           --rc-glass-hover: color-mix(in srgb, var(--primary-text-color) 7%, transparent);
           --rc-ring: color-mix(in srgb, var(--rc-fg) 75%, transparent);
